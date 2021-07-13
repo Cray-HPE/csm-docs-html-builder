@@ -1,0 +1,6 @@
+[submodule "hugo-csm-docs/themes/hugo-theme-learn"]
+	path = hugo-csm-docs/themes/hugo-theme-learn
+	url = git@github.com:matcornic/hugo-theme-learn.git
+[submodule "docs-csm"]
+	path = docs-csm
+	url = git@github.com:Cray-HPE/docs-csm.git
