@@ -8,6 +8,7 @@ if [[ -z $1 ]]; then
 fi
 
 cd $THIS_DIR/..
+mkdir -p ./content
 
 echo "Cloning into docs-csm..."
 rm -rf docs-csm
