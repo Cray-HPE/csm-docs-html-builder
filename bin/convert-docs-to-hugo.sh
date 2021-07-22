@@ -133,8 +133,9 @@ function make_new_title() {
 }
 
 function transform_links() {
-    # Remove .md suffixes from links.  TODO: lowercase links
-    cat $1 | sed -r 's|\((.*).md\)|\(\1\)|g'
+    # Remove .md suffixes from links and lowercase text.
+    # Note: This sed command's \L for lowercasing doesn't work on Mac. Use the build container instead.
+    cat $1 | sed -r 's|\]\((.*).md|\]\(\L\1|g'
 }
 
 function gen_hugo_yaml() {
@@ -158,7 +159,7 @@ function gen_index_content() {
     # e.g. 1. [Prepare Configuration Payload](install/prepare_configuration_payload.md)
     for f in $(ls $1)
     do
-        if [[ $f != "_index.md" ]]; then
+        if [[ $f != "_index.md" ]] && [[ "${f: -3}" == ".md" ]]; then
             f=$(echo $f | sed 's`.md``' | awk '{print tolower($0)}')
             echo "1. [$(make_new_title ${f})](${2}/${f}/)"
         fi
@@ -183,9 +184,15 @@ function populate_missing_index_files() {
     done
 }
 
+function apply_specific_fixes() {
+    mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
+    mv $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/README.md $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/_index.md
+}
+
 validate_args $1 $2 $3 $4
 SOURCE_DIR=$(cd $2 && pwd)
 DESTINATION_DIR=$(cd $4 && pwd)
 rm -rf $DESTINATION_DIR && mkdir -p $DESTINATION_DIR
 crawl_directory $SOURCE_DIR
 populate_missing_index_files
+apply_specific_fixes
