@@ -9,6 +9,9 @@ directory for use by the Hugo static website engine. It expects two named argume
 the path to the docs-csm repo and --destination is the path to the hugo content folder.  The content 
 folder will be deleted and recreated.
 
+This script also looks for an environment variable named CSM_BRANCH in order to place content in the
+appropriate subdirectory which maps to a Hugo "language".
+
 Example: 
 ./convert-docs-to-hugo.sh --source [path to docs-csm] --destination [path to hugo content]
 
@@ -23,7 +26,7 @@ function validate_args() {
     [[ ! -d $2 ]] && help
     if [[ ! -f $2/docs-csm-install.spec ]]; then
         echo "Expected --source to point to the docs-csm repo.  Didn't find docs-csm-install.spec file."
-        exit 1
+        help
     fi
 
     [[ $3 != "--destination" ]] && help
@@ -32,7 +35,12 @@ function validate_args() {
     [[ ! -d $4 ]] && help
     if [[ $(basename $4) != "content" ]]; then
         echo "Expected --destination to point to the hugo content directory."
-        exit 1
+        help
+    fi
+
+    if [[ -z $CSM_BRANCH ]]; then
+        echo "Expected a CSM_BRANCH environment variable."
+        help
     fi
 }
 
@@ -156,12 +164,13 @@ YAML
 }
 
 function gen_index_content() {
-    # e.g. 1. [Prepare Configuration Payload](install/prepare_configuration_payload.md)
-    for f in $(ls $1)
+    # e.g. 1. [Prepare Configuration Payload](prepare_configuration_payload)
+    for f in $(ls $1/)
     do
-        if [[ $f != "_index.md" ]] && [[ "${f: -3}" == ".md" ]]; then
+        if [[ $f != "_index.md" ]] && [[ "${f: -3}" == ".md" ]] || \
+        [[ -d ${1}/$f ]] && [[ ! $(echo $f | grep -E "(^img$|^scripts$)") ]]; then
             f=$(echo $f | sed 's`.md``' | awk '{print tolower($0)}')
-            echo "1. [$(make_new_title ${f})](${2}/${f}/)"
+            echo "1. [$(make_new_title ${f})](${f})"
         fi
     done
 }
@@ -185,14 +194,22 @@ function populate_missing_index_files() {
 }
 
 function apply_specific_fixes() {
-    mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
+    [[ $CSM_BRANCH != "0.9" ]] && mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
     mv $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/README.md $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/_index.md
+}
+
+function delete_dir_contents() {
+    [[ -d $1 ]] && rm -rf $1
+    mkdir -p $1
 }
 
 validate_args $1 $2 $3 $4
 SOURCE_DIR=$(cd $2 && pwd)
+
 DESTINATION_DIR=$(cd $4 && pwd)
-rm -rf $DESTINATION_DIR && mkdir -p $DESTINATION_DIR
+DESTINATION_DIR="${DESTINATION_DIR}/${CSM_BRANCH}"
+delete_dir_contents $DESTINATION_DIR
+
 crawl_directory $SOURCE_DIR
 populate_missing_index_files
 apply_specific_fixes
