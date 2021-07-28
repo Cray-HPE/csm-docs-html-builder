@@ -191,10 +191,13 @@ figcaption h4 {
 
 .select-style {
     border: 0;
-    width: 150px;
-    border-radius: 0px;
+    width: 22%;
+    border-radius: 0.6em;
+    padding: 0px 6px;
     overflow: hidden;
     display: inline-flex;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
 }
 
 .select-style svg {
@@ -212,14 +215,15 @@ figcaption h4 {
 .select-style select {
     padding: 0;
     width: 130%;
+    color: white;
     border: none;
     box-shadow: none;
     background: transparent;
     background-image: none;
     -webkit-appearance: none;
     margin: auto;
-    margin-left: 0px;
-    margin-right: -20px;
+    margin-left: 0.2em;
+    margin-right: -27px
 }
 
 .select-style select:focus {
