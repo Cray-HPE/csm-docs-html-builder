@@ -1,7 +1,9 @@
-baseURL = "http://example.org/"
-languageCode = "en-us"
-title = "Cray Systems Management (CSM)"
+title = "Cray System Management (CSM)"
 theme = "hugo-theme-learn"
+baseURL = "/"
+languageCode = "en-US"
+defaultContentLanguage = "en-10"
+defaultContentLanguageInSubdir = true
 
 [outputs]
 home = ["HTML", "RSS", "JSON" ]
@@ -9,3 +11,20 @@ home = ["HTML", "RSS", "JSON" ]
 [params]
 themeVariant = "blue"
 
+[languages]
+  [languages.en-09]
+    contentDir = "content/0.9"
+    languageName = "0.9"
+    weight = 10
+  [languages.en-10]
+    contentDir = "content/1.0"
+    languageName = "1.0"
+    weight = 20
+  [languages.en-11]
+    contentDir = "content/1.1"
+    languageName = "1.1"
+    weight = 30
+  [languages.en-12]
+    contentDir = "content/1.2"
+    languageName = "1.2"
+    weight = 40

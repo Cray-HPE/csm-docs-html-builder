@@ -24,4 +24,4 @@ services:
       - --source
       - /src/docs-csm/
       - --destination
-      - /src/content
+      - /src/content/
