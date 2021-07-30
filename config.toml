@@ -4,6 +4,7 @@ baseURL = "/"
 languageCode = "en-US"
 defaultContentLanguage = "en-10"
 defaultContentLanguageInSubdir = true
+showVisitedLinks = true
 
 [outputs]
 home = ["HTML", "RSS", "JSON" ]
@@ -16,15 +17,19 @@ themeVariant = "blue"
     contentDir = "content/0.9"
     languageName = "0.9"
     weight = 10
+    landingPageURL = ""
   [languages.en-10]
     contentDir = "content/1.0"
     languageName = "1.0"
     weight = 20
+    landingPageURL = ""
   [languages.en-11]
     contentDir = "content/1.1"
     languageName = "1.1"
     weight = 30
+    landingPageURL = ""
   [languages.en-12]
     contentDir = "content/1.2"
     languageName = "1.2"
     weight = 40
+    landingPageURL = ""
