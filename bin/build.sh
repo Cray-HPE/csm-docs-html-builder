@@ -20,4 +20,6 @@ for branch in ${BRANCHES[@]}; do
   docker-compose run -e CSM_BRANCH=$branch hugo_prep
 done
 
+echo "Build html pages with Hugo..."
+docker-compose run -w /src hugo_build
 cd $OLDPWD
