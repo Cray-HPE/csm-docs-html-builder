@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  hugo_serve:
+    container_name: hugo
+    # image: peaceiris/hugo:v0.x.x
+    image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
+    # image: peaceiris/hugo:v0.x.x-full  # Hugo Modules and Node.js
+    ports:
+      - "1313:1313"
+    volumes:
+      - ${PWD}:/src
+    command:
+      - server
+      - --bind=0.0.0.0
+      - --buildDrafts
+  hugo_prep:
+    container_name: hugo
+    # image: peaceiris/hugo:v0.x.x
+    image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
+    # image: peaceiris/hugo:v0.x.x-full  # Hugo Modules and Node.js
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/
+  hugo_build:
+    container_name: hugo
+    # image: peaceiris/hugo:v0.x.x
+    image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
+    # image: peaceiris/hugo:v0.x.x-full  # Hugo Modules and Node.js
+    volumes:
+      - ${PWD}:/src
+    working_dir: /src
+  serve_static:
+    container_name: nginx
+    image: nginx
+    volumes:
+      - ${PWD}/public:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
