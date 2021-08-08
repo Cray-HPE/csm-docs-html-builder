@@ -51,9 +51,6 @@ function transform_links() {
     # Remove .md suffixes from links and lowercase text.
     # $1 is the file content
 
-    # Note: This sed command's \L for lowercasing doesn't work on Mac. Use the build container instead.
-    # cat $1 | sed -r 's|\]\((.*).md|\]\(\L\1|g'
-
     # Adds hugo's relref function to transform relative links during build step.
     # Converts:
     # - Skips internal stash links

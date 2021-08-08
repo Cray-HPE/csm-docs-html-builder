@@ -2,3 +2,4 @@ content/
 docs-csm/
 public/
 .DS_Store
+csm_docs_build.log
