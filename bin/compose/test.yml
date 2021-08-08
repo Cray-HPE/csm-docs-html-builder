@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+  serve_static:
+    container_name: nginx
+    image: nginx
+    volumes:
+      - ${PWD}/public:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+    networks:
+      csm_documentation:
+        ipv4_address: 10.253.253.2
+  linkcheck_en_10:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: csm_docs_linkcheck_10
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.253.2/en-10
+    networks:
+      csm_documentation:
+        ipv4_address: 10.253.253.3
+  linkcheck_en_09:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: csm_docs_linkcheck_09
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.253.2/en-09
+    networks:
+      csm_documentation:
+        ipv4_address: 10.253.253.4
+  linkcheck_en_11:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: csm_docs_linkcheck_11
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.253.2/en-11
+    networks:
+      csm_documentation:
+        ipv4_address: 10.253.253.5
+  linkcheck_en_12:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: csm_docs_linkcheck_12
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.253.2/en-12
+    networks:
+      csm_documentation:
+        ipv4_address: 10.253.253.6
+networks:
+  csm_documentation:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.253.253.0/24

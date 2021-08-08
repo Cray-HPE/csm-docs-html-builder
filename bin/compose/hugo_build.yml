@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  hugo_build:
+    container_name: hugo_build
+    # image: peaceiris/hugo:v0.x.x
+    # image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
+    image: peaceiris/hugo:v0.84.4-full  # Hugo Modules and Node.js
+    volumes:
+      - ${PWD}:/src
+    working_dir: /src

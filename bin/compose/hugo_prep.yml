@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  hugo_prep_09:
+    container_name: hugo_prep_09
+    image: ubuntu
+    environment:
+      CSM_BRANCH: 0.9
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/
+  hugo_prep_10:
+    container_name: hugo_prep_10
+    image: ubuntu
+    environment:
+      CSM_BRANCH: 1.0
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/
+  hugo_prep_11:
+    container_name: hugo_prep_11
+    image: ubuntu
+    environment:
+      CSM_BRANCH: 1.1
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/
+  hugo_prep_12:
+    container_name: hugo_prep_12
+    image: ubuntu
+    environment:
+      CSM_BRANCH: 1.2
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/

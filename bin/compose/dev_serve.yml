@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  hugo_serve:
+    container_name: hugo
+    # image: peaceiris/hugo:v0.x.x
+    image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
+    # image: peaceiris/hugo:v0.x.x-full  # Hugo Modules and Node.js
+    ports:
+      - "1313:1313"
+    volumes:
+      - ${PWD}:/src
+    command:
+      - server
+      - --bind=0.0.0.0
+      - --buildDrafts
