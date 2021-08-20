@@ -11,25 +11,27 @@ home = ["HTML", "RSS", "JSON" ]
 
 [params]
 themeVariant = "blue"
+disableNextPrev = true
+disableLandingPageButton = true
 
 [languages]
   [languages.en-09]
     contentDir = "content/0.9"
     languageName = "0.9"
     weight = 10
-    landingPageURL = ""
+    landingPageURL = "/csm/en-09"
   [languages.en-10]
     contentDir = "content/1.0"
     languageName = "1.0"
     weight = 20
-    landingPageURL = ""
+    landingPageURL = "/csm/en-10"
   [languages.en-11]
     contentDir = "content/1.1"
     languageName = "1.1"
     weight = 30
-    landingPageURL = ""
+    landingPageURL = "/csm/en-11"
   [languages.en-12]
     contentDir = "content/1.2"
     languageName = "1.2"
     weight = 40
-    landingPageURL = ""
+    landingPageURL = "/csm/en-12"
