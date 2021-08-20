@@ -1,6 +1,6 @@
 title = "Cray System Management (CSM)"
 theme = "hugo-theme-learn"
-baseURL = "/"
+baseURL = "/csm/"
 languageCode = "en-US"
 defaultContentLanguage = "en-10"
 defaultContentLanguageInSubdir = true
