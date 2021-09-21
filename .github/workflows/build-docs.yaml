@@ -8,6 +8,9 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Print environment variables
+        run: |
+          printenv
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Run Generator
