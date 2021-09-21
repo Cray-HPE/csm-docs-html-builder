@@ -1,9 +1,12 @@
----
 name: Generate CSM Docs
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - feature/github-worklow-generate-doc
+  workflow_dispatch:
 jobs:
-  Generate-CSM-Docs:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: self-hosted
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
