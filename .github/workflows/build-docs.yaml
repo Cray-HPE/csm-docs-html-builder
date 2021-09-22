@@ -8,17 +8,26 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Setup SSH keys
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+            ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
+
       - name: Print environment variables
         run: |
           printenv
+
       - name: Check out repository code
         uses: actions/checkout@v2
+
       - name: Run Generator
         run: |
           ./bin/build.sh
+
       - name: Do a listing
         run: |
           printenv
           git status
           ls -al 
+
       - run: echo "This job's status is ${{ job.status }}."
