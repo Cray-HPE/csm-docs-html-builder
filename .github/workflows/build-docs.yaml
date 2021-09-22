@@ -36,6 +36,7 @@ jobs:
       - name: Prepare runner
         run: |
           sudo apt install -y docker-compose
+          sudo systemctl start docker
 
       - name: Run Generator
         run: |
