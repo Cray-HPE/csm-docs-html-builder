@@ -20,14 +20,14 @@ jobs:
           uname -a
           printenv | sort
           which docker || true
-          ls -al /etc
+          cat /etc/issue
 
       - name: Check out repository code
         uses: actions/checkout@v2
 
       - name: Prepare runner
         run: |
-          pip install docker-compose
+          sudo apt install -y docker-compose
 
       - name: Run Generator
         run: |
