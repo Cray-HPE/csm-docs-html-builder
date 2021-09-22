@@ -1,9 +1,11 @@
 name: Generate CSM Docs
+
 on:
   push:
     branches:
       - feature/github-worklow-generate-doc
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: self-hosted
@@ -13,9 +15,10 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
 
-      - name: Print environment variables
+      - name: Print some info about runner
         run: |
-          printenv
+          uname -a
+          printenv | sort
 
       - name: Check out repository code
         uses: actions/checkout@v2
