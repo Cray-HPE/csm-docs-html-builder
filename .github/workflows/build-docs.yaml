@@ -14,7 +14,7 @@ jobs:
         run: |
           sudo apt install -y docker-compose
           sudo systemctl start docker
-          sudo rm -rf .git* *
+          sudo rm -rf csm-docs-html-builder docs-csm
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -41,6 +41,8 @@ jobs:
           cd docs-csm
           git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           cd ..
+          ls -al
+          ls -al *
           rm -rf docs-csm/*
           cp csm-docs-html-builder/public/* docs-csm/
           cd docs-csm
