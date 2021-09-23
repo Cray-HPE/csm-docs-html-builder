@@ -30,20 +30,18 @@ jobs:
         run: |
           pwd
           ls -al
+          mkdir public
+          echo test > public/index.html
           # ./bin/build.sh
         working-directory: csm-docs-html-builder
 
       - name: Push generated HTML
         run: |
-          pwd
-          ls -al
           git clone git@github.com:Cray-HPE/docs-csm.git
           cd docs-csm
           git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           cd ..
-          ls -al
-          ls -al *
-          rm -rf docs-csm/*
+          rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
           cp csm-docs-html-builder/public/* docs-csm/
           cd docs-csm
           git add .
