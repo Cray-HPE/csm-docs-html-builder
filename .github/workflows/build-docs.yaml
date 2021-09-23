@@ -27,12 +27,7 @@ jobs:
           path: csm-docs-html-builder
 
       - name: Run generator
-        run: |
-          pwd
-          ls -al
-          mkdir public
-          echo test > public/index.html
-          # ./bin/build.sh
+        run: /bin/build.sh
         working-directory: csm-docs-html-builder
 
       - name: Push generated HTML
@@ -47,6 +42,4 @@ jobs:
           cd docs-csm
           git add .
           git commit -m "Generated HTML from docs-csm revision ${git_sha}"
-          git log
-          ls -al
-          # git push origin release/docs-html
+          git push origin release/docs-html
