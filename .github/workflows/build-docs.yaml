@@ -10,42 +10,34 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: Setup SSH keys
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-            ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
-
-      - name: Print some info about runner
-        run: |
-          uname -a
-          echo "---------------------------------------------------------------"
-          printenv | sort
-          echo "---------------------------------------------------------------"
-          which docker || true
-          echo "---------------------------------------------------------------"
-          ps -ef
-          echo "---------------------------------------------------------------"
-          ls -al /var/run
-          echo "---------------------------------------------------------------"
-          id
-          echo "---------------------------------------------------------------"
-
-      - name: Check out repository code
-        uses: actions/checkout@v2
-
       - name: Prepare runner
         run: |
           sudo apt install -y docker-compose
           sudo systemctl start docker
 
-      - name: Run Generator
-        run: |
-          ./bin/build.sh
+      - name: Setup SSH keys
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+            ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
 
-      - name: Do a listing
-        run: |
-          printenv
-          git status
-          ls -al 
+      - name: Check out csm-docs-html-builder repository
+        uses: actions/checkout@v2
+        with:
+          path: csm-docs-html-builder
 
-      - run: echo "This job's status is ${{ job.status }}."
+      - name: Run generator
+        run: ./bin/build.sh
+        working-directory: csm-docs-html-builder
+
+      - name: Push generated HTML
+        run: |
+          git clone git@github.com:Cray-HPE/docs-csm.git
+          cd docs-csm
+          git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
+          cd ..
+          rm -rf docs-csm/*
+          cp csm-docs-html-builder/public/* docs-csm/
+          cd docs-csm
+          git add .
+          git commit -m "Generated HTML from docs-html revision ${{ github.sha }}"
+          git log
