@@ -39,11 +39,14 @@ jobs:
         run: |
           git clone git@github.com:Cray-HPE/docs-csm.git
           cd docs-csm
+          git_sha=$(git log -1 --format=%h)
           git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           cd ..
           rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
           cp csm-docs-html-builder/public/* docs-csm/
           cd docs-csm
           git add .
-          git commit -m "Generated HTML from docs-html revision ${{ github.sha }}"
+          git commit -m "Generated HTML from docs-csm revision ${git_sha}"
           git log
+          ls -al
+          # git push origin release/docs-html
