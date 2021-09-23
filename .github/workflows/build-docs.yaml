@@ -10,18 +10,11 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: Debug
-        run: |
-          id
-          pwd
-          printenv | sort
-          ls -al
-          ls -al *
-
       - name: Prepare runner
         run: |
           sudo apt install -y docker-compose
           sudo systemctl start docker
+          sudo rm -rf .git* *
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
