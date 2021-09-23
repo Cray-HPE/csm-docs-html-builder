@@ -27,7 +27,7 @@ jobs:
           path: csm-docs-html-builder
 
       - name: Run generator
-        run: /bin/build.sh
+        run: ./bin/build.sh
         working-directory: csm-docs-html-builder
 
       - name: Push generated HTML
