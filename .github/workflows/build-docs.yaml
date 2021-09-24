@@ -16,18 +16,10 @@ jobs:
     steps:
       - name: Prepare runner
         run: |
+          echo  "Running on ${RUNNER_NAME} in ${RUNNER_WORKSPACE}"
           sudo apt install -y docker-compose
           sudo systemctl start docker
           sudo rm -rf csm-docs-html-builder docs-csm
-          echo "========================================================================="
-          sudo dmidecode || true
-          echo "========================================================================="
-          free -g || true
-          echo "========================================================================="
-          cat /proc/cpuinfo || true
-          echo "========================================================================="
-          ls -al /boot
-          echo "========================================================================="
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -51,7 +43,7 @@ jobs:
           git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           cd ..
           rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
-          cp csm-docs-html-builder/public/* docs-csm/
+          cp -r csm-docs-html-builder/public/* docs-csm/
           cd docs-csm
           git add .
           git commit -m "Generated HTML from docs-csm revision ${git_sha}"
