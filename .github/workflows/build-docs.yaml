@@ -1,12 +1,9 @@
 name: Generate CSM Docs
 
 on:
-  push:
-    branches:
-      - feature/github-worklow-generate-doc
-  #schedule:
-  #  # 3AM UTC / 11PM EST / 8PM PST
-  #  - cron:  '0 3 * * *'
+  schedule:
+    # 3AM UTC / 11PM EST / 8PM PST
+    - cron:  '0 3 * * *'
   workflow_dispatch:
 
 jobs:
