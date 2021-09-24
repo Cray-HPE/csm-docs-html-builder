@@ -4,17 +4,30 @@ on:
   push:
     branches:
       - feature/github-worklow-generate-doc
+  #schedule:
+  #  # 3AM UTC / 11PM EST / 8PM PST
+  #  - cron:  '0 3 * * *'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: self-hosted
+    timeout-minutes: 60
     steps:
       - name: Prepare runner
         run: |
           sudo apt install -y docker-compose
           sudo systemctl start docker
           sudo rm -rf csm-docs-html-builder docs-csm
+          echo "========================================================================="
+          sudo dmidecode || true
+          echo "========================================================================="
+          free -g || true
+          echo "========================================================================="
+          cat /proc/cpuinfo || true
+          echo "========================================================================="
+          ls -al /boot
+          echo "========================================================================="
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
