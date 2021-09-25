@@ -18,16 +18,17 @@ jobs:
         image: nginx
         # Map port 8080 on the Docker host to port 80 on the nginx container
         ports:
-          - 8080:80
+          - 80
         volumes:
           - public:/usr/share/nginx/html
     steps:
       - run: |
           pwd
           ls -al
+          mount
           mkdir -p public
           echo '<html>test</html>' > public/index.html
-          curl -v http://localhost:8080/index.html
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
 
       # - name: Prepare runner
       #   run: |
