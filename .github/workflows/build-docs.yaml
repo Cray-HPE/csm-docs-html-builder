@@ -34,6 +34,7 @@ jobs:
         run: |
           source ./bin/lib/content_prep
           git clone git@github.com:Cray-HPE/docs-csm.git
+          mkdir -p ./content
           for CSM_BRANCH in 0.9 1.0 1.1 1.2; do
               git -C ./docs-csm checkout -b release/${CSM_BRANCH} -t origin/release/${CSM_BRANCH}
               bash -xv ./bin/convert-docs-to-hugo.sh --source ./docs-csm --destination ./content
