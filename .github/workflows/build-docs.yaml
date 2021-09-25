@@ -13,25 +13,18 @@ jobs:
   build:
     runs-on: self-hosted
     timeout-minutes: 30
-    # services:
-    #   nginx:
-    #     image: nginx
-    #     # Map port 8080 on the Docker host to port 80 on the nginx container
-    #     ports:
-    #       - 8080:80
-    #     volumes:
-    #       - .:/usr/share/nginx/html
+    services:
+      nginx:
+        image: nginx
+        # Map port 8080 on the Docker host to port 80 on the nginx container
+        ports:
+          - 8080:80
+        volumes:
+          - .:/usr/share/nginx/html
     steps:
-      - name: clean runner from docker-compose and dependent packages
-        run: |
-          if [ "${RUNNER_NAME}" == "github-actions-runner-xl2q" ]; then
-              sudo apt install -y containerd.io=1.4.9-1 docker-ce=5:20.10.8~3-0~debian-bullseye \
-                  docker-ce-cli=5:20.10.8~3-0~debian-bullseye docker-ce-rootless-extras=5:20.10.8~3-0~debian-bullseye
-          fi
-
-      # - run: |
-      #     echo '<html>test</html>' > index.html
-      #     curl -v http://localhost:8080/index.html
+      - run: |
+          echo '<html>test</html>' > index.html
+          curl -v http://localhost:8080/index.html
 
       # - name: Prepare runner
       #   run: |
