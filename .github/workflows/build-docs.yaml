@@ -25,14 +25,19 @@ jobs:
         release: ["0.9", "1.0", "1.1", "1.2"]
       max-parallel: 4
     steps:
-      - run: |
-          pwd
-          ls -al
-          docker volume ls --format "{{.Name}}: {{.Mountpoint}}"
-          docker ps --no-trunc
-          echo 'Generating docs for release ${{ matrix.release }}'
-          # sudo bash -c "echo '<html>test</html>' > /var/lib/docker/volumes/public/_data/index.html"
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
+      - name: Run hugo
+        uses: docker://peaceiris/hugo:v0.84.4-full
+        with:
+          entrypoint: mount
+
+      # - run: |
+      #     pwd
+      #     ls -al
+      #     docker volume ls --format "{{.Name}}: {{.Mountpoint}}"
+      #     docker ps --no-trunc
+      #     echo 'Generating docs for release ${{ matrix.release }}'
+      #     # sudo bash -c "echo '<html>test</html>' > /var/lib/docker/volumes/public/_data/index.html"
+      #     curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
 
       # - name: Prepare runner
       #   run: |
