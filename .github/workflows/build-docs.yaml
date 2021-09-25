@@ -4,6 +4,9 @@ on:
   schedule:
     # 3AM UTC / 11PM EST / 8PM PST
     - cron:  '0 3 * * *'
+  push:
+    branches:
+      - feature/github-worklow-generate-doc
   workflow_dispatch:
 
 jobs:
@@ -16,13 +19,12 @@ jobs:
           echo  "Running on ${RUNNER_NAME} in ${RUNNER_WORKSPACE}"
           sudo apt install -y docker-compose
           sudo systemctl start docker
-          sudo rm -rf csm-docs-html-builder docs-csm
+          sudo rm -rf csm-docs-html-builder
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
         with:
             ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
-
       - name: Check out csm-docs-html-builder repository
         uses: actions/checkout@v2
         with:
@@ -33,15 +35,5 @@ jobs:
         working-directory: csm-docs-html-builder
 
       - name: Push generated HTML
-        run: |
-          git clone git@github.com:Cray-HPE/docs-csm.git
-          cd docs-csm
-          git_sha=$(git log -1 --format=%h)
-          git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
-          cd ..
-          rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
-          cp -r csm-docs-html-builder/public/* docs-csm/
-          cd docs-csm
-          git add .
-          git commit -m "Generated HTML from docs-csm revision ${git_sha}"
-          git push origin release/docs-html
+        run: ./bin/push.sh
+        working-directory: csm-docs-html-builder
