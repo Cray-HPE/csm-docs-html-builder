@@ -41,7 +41,7 @@ jobs:
               cp -r ./docs-csm/tmp ./docs-csm/${CSM_BRANCH}
           done
           for CSM_BRANCH in ${CSM_BRANCHES}; do
-              ./bin/convert-docs-to-hugo.sh --source ./docs-csm --destination ./content
+              CSM_BRANCH=${CSM_BRANCH} ./bin/convert-docs-to-hugo.sh --source ./docs-csm --destination ./content
           done
           rm -Rf docs-csm
           echo "Creating root _index.md"
