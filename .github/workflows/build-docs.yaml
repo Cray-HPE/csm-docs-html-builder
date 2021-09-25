@@ -20,10 +20,13 @@ jobs:
         ports:
           - 8080:80
         volumes:
-          - .:/usr/share/nginx/html
+          - public:/usr/share/nginx/html
     steps:
       - run: |
-          echo '<html>test</html>' > index.html
+          pwd
+          ls -al
+          mkdir -p public
+          echo '<html>test</html>' > public/index.html
           curl -v http://localhost:8080/index.html
 
       # - name: Prepare runner
