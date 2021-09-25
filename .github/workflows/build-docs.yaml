@@ -24,23 +24,9 @@ jobs:
     steps:
       - name: clean runner from docker-compose and dependent packages
         run: |
-          set -xv
-          ls -al /etc/containerd
-          ls -al /etc/default
-          ls -al /etc/init.d
           if [ "${RUNNER_NAME}" == "github-actions-runner-xl2q" ]; then
-            sudo apt remove -y binutils binutils-common binutils-x86-64-linux-gnu cgroupfs-mount containerd \
-                docker-compose docker.io libbinutils libctf-nobfd0 libctf0 libintl-perl \
-                libintl-xs-perl libmodule-find-perl libmodule-scandeps-perl \
-                libproc-processtable-perl libsort-naturally-perl libterm-readkey-perl \
-                libyaml-0-2 needrestart python3-attr python3-cached-property python3-certifi \
-                python3-chardet python3-distutils python3-docker python3-dockerpty \
-                python3-docopt python3-idna python3-importlib-metadata python3-jsonschema \
-                python3-lib2to3 python3-more-itertools python3-pkg-resources \
-                python3-pyrsistent python3-requests python3-setuptools python3-six \
-                python3-texttable python3-urllib3 python3-websocket python3-yaml \
-                python3-zipp runc tini
-          #    sudo apt install -y containerd.io==1.4.9-1 docker-ce==5:20.10.8~3-0~debian-bullseye docker-ce-cli==5:20.10.8~3-0~debian-bullseye docker-ce-rootless-extras==5:20.10.8~3-0~debian-bullseye
+              sudo apt install -y containerd.io=1.4.9-1 docker-ce=5:20.10.8~3-0~debian-bullseye \
+                  docker-ce-cli=5:20.10.8~3-0~debian-bullseye docker-ce-rootless-extras=5:20.10.8~3-0~debian-bullseye
           fi
 
       # - run: |
