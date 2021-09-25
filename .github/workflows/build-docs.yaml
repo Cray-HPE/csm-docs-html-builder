@@ -32,15 +32,12 @@ jobs:
 
       - name: Prepare Hugo processor run
         run: |
-          CSM_BRANCHES="0.9 1.0 1.1 1.2"
           source ./bin/lib/content_prep
           mkdir -p ./content ./docs-csm/tmp
           git clone git@github.com:Cray-HPE/docs-csm.git ./docs-csm/tmp
-          for CSM_BRANCH in ${CSM_BRANCHES}; do
+          for CSM_BRANCH in 0.9 1.0 1.1 1.2; do
               git -C ./docs-csm/tmp checkout -b release/${CSM_BRANCH} -t origin/release/${CSM_BRANCH}
               cp -r ./docs-csm/tmp ./docs-csm/${CSM_BRANCH}
-          done
-          for CSM_BRANCH in ${CSM_BRANCHES}; do
               CSM_BRANCH=${CSM_BRANCH} ./bin/convert-docs-to-hugo.sh --source ./docs-csm --destination ./content
           done
           rm -Rf docs-csm
