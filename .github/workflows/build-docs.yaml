@@ -13,51 +13,42 @@ jobs:
   build:
     runs-on: self-hosted
     timeout-minutes: 30
+    # TODO: Use matrix strategy when/if we are allowed to use upload/download artifact (this implies paid storage)
     services:
       nginx:
         image: nginx
         ports:
           - 80
         volumes:
-          - public:/usr/share/nginx/html
-    strategy:
-      matrix:
-        release: ["0.9", "1.0", "1.1", "1.2"]
-      max-parallel: 4
+          - ${{github.workspace}}/public:/usr/share/nginx/html
     steps:
-      - name: Run hugo
+      - name: Setup SSH keys
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
+
+      - name: Check out csm-docs-html-builder repository
+        uses: actions/checkout@v2
+
+      - name: Prepare Hugo processor run
+        run: |
+          source ./bin/lib/content_prep
+          git clone git@github.com:Cray-HPE/docs-csm.git
+          for CSM_BRANCH in 0.9 1.0 1.1 1.2; do
+              git -C docs-csm checkout -b release/${CSM_BRANCH} -t origin/release/${CSM_BRANCH}
+              ./bin/convert-docs-to-hugo.sh --source ./docs-csm --destination ./content
+          done
+          rm -Rf docs-csm
+          echo "Creating root _index.md"
+          gen_hugo_yaml "CSM Documentation" > content/_index.md
+          gen_index_header "CSM Documentation" >> content/_index.md
+          gen_index_content content $relative_path >> content/_index.md
+
+      - name: Run Hugo processor
         uses: docker://peaceiris/hugo:v0.84.4-full
         with:
-          entrypoint: mount
+          entrypoint: /usr/bin/hugo --config /github/workspace/config.toml --source /github/workspace/content --destination /github/workspace/public
 
-      # - run: |
-      #     pwd
-      #     ls -al
-      #     docker volume ls --format "{{.Name}}: {{.Mountpoint}}"
-      #     docker ps --no-trunc
-      #     echo 'Generating docs for release ${{ matrix.release }}'
-      #     # sudo bash -c "echo '<html>test</html>' > /var/lib/docker/volumes/public/_data/index.html"
-      #     curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
-
-      # - name: Prepare runner
-      #   run: |
-      #     echo  "Running on ${RUNNER_NAME} in ${RUNNER_WORKSPACE}"
-      #     sudo rm -rf csm-docs-html-builder
-
-      # - name: Setup SSH keys
-      #   uses: webfactory/ssh-agent@v0.5.3
-      #   with:
-      #       ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
-
-      # - name: Check out csm-docs-html-builder repository
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: csm-docs-html-builder
-
-      # - name: Run generator
-      #   run: ./bin/build.sh
-      #   working-directory: csm-docs-html-builder
-
-      # - name: Push generated HTML
-      #   run: ./bin/push.sh
-      #   working-directory: csm-docs-html-builder
+      - name: Run link checker
+        run: |
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
