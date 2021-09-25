@@ -1,0 +1,50 @@
+name: Generate CSM Docs
+
+on:
+  #schedule:
+  #  # 3AM UTC / 11PM EST / 8PM PST
+  #  - cron:  '0 3 * * *'
+  push:
+    branches:
+      - feature/github-worklow-generate-doc-service
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 30
+    services:
+      nginx:
+        image: nginx
+        # Map port 8080 on the Docker host to port 80 on the nginx container
+        ports:
+          - 8080:80
+        volumes:
+          - .:/usr/share/nginx/html
+    steps:
+      - run: |
+          echo '<html>test</html>' > index.html
+          curl -v http://localhost:8080/index.html
+
+      # - name: Prepare runner
+      #   run: |
+      #     echo  "Running on ${RUNNER_NAME} in ${RUNNER_WORKSPACE}"
+      #     sudo rm -rf csm-docs-html-builder
+
+      # - name: Setup SSH keys
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #       ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
+
+      # - name: Check out csm-docs-html-builder repository
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: csm-docs-html-builder
+
+      # - name: Run generator
+      #   run: ./bin/build.sh
+      #   working-directory: csm-docs-html-builder
+
+      # - name: Push generated HTML
+      #   run: ./bin/push.sh
+      #   working-directory: csm-docs-html-builder
