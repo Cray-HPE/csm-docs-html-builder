@@ -23,12 +23,13 @@ jobs:
     strategy:
       matrix:
         release: ["0.9", "1.0", "1.1", "1.2"]
+      max-parallel: 4
     steps:
       - run: |
           pwd
           ls -al
           docker volume ls --format "{{.Name}}: {{.Mountpoint}}"
-          docker ps --no-truc
+          docker ps --no-trunc
           echo 'Generating docs for release ${{ matrix.release }}'
           # sudo bash -c "echo '<html>test</html>' > /var/lib/docker/volumes/public/_data/index.html"
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
