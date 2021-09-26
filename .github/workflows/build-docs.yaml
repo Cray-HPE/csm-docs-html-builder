@@ -49,7 +49,7 @@ jobs:
       - name: Run Hugo processor
         uses: docker://peaceiris/hugo:v0.84.4-full
         with:
-          entrypoint: /usr/bin/hugo --config /github/workspace/config.toml --source /github/workspace/content --destination /github/workspace/public
+          args: --config /github/workspace/config.toml --source /github/workspace/content --destination /github/workspace/public
 
       - name: Run link checker
         run: |
