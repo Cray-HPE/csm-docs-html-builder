@@ -80,6 +80,9 @@ jobs:
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09
 
       - name: Run link checker
-        uses: docker://filiph/linkcheck
+        # Needs to be pre-built and put into artifactory
+        # uses: docker://filiph/linkcheck
+        uses: docker://google/dart
         with:
-            args: http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09
+            entrypoint: bash
+            args: -c "pub global activate linkcheck; /root/.pub-cache/bin/linkcheck http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
