@@ -47,6 +47,7 @@ jobs:
             cd ../..
             sudo rm -rf docs-csm/tmp
           done
+          mkdir -p ./content ./public
 
       - name: Prepare pages for Hugo processor (0.9)
         uses: docker://ubuntu
