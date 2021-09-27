@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: self-hosted
     timeout-minutes: 30
-    # TODO: Use matrix strategy when/if we are allowed to use upload/download artifact (this implies paid storage)
+    # TODO: Use matrix strategy when/if we have persistence layer between jobs
     services:
       nginx:
         image: nginx
@@ -42,6 +42,7 @@ jobs:
             git clone git@github.com:Cray-HPE/docs-csm.git
             mv docs-csm ../$branch
             cd ../$branch
+            git config pull.ff only
             git fetch
             git checkout "release/$branch" && git pull origin "release/$branch"
             cd ../..
@@ -65,6 +66,7 @@ jobs:
           gen_hugo_yaml "CSM Documentation" > content/_index.md
           gen_index_header "CSM Documentation" >> content/_index.md
           gen_index_content content $relative_path >> content/_index.md
+          ls -al content/
 
       - name: Run Hugo processor
         uses: docker://peaceiris/hugo:v0.84.4-full
@@ -74,4 +76,5 @@ jobs:
 
       - name: Run link checker
         run: |
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/index.html
+          ls -al public/
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
