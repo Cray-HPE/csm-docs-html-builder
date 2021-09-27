@@ -74,7 +74,12 @@ jobs:
           args: --config /github/workspace/config.toml --source /github/workspace/content
             --destination /github/workspace/public --themesDir /github/workspace/themes
 
-      - name: Run link checker
+      - name: Debug
         run: |
-          ls -al public/
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
+          ls -al ${{github.workspace}}/public
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09
+
+      - name: Run link checker
+        uses: docker://filiph/linkcheck
+        with:
+            args: http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09
