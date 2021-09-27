@@ -20,7 +20,7 @@ jobs:
         ports:
           - 80
         volumes:
-          - ${{github.workspace}}/public:/usr/share/nginx/html
+          - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
       - name: Cleanup workspace
         run: sudo rm -rf public content docs-csm
@@ -33,7 +33,7 @@ jobs:
       - name: Check out csm-docs-html-builder repository
         uses: actions/checkout@v2
 
-      - name: Prepare Hugo processor run
+      - name: Checkout release banches
         run: |
           set -ex
           for branch in 0.9 1.0 1.1 1.2; do
@@ -77,4 +77,4 @@ jobs:
       - name: Run link checker
         run: |
           ls -al public/
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
