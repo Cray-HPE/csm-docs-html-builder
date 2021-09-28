@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -exv
+set -e
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 

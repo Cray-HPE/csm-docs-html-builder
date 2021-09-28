@@ -93,14 +93,16 @@ jobs:
           gen_hugo_yaml "CSM Documentation" > content/_index.md
           gen_index_header "CSM Documentation" >> content/_index.md
           gen_index_content content $relative_path >> content/_index.md
-          find content/
         working-directory: csm-docs-html-builder
 
       - name: Run Hugo processor
         uses: docker://peaceiris/hugo:v0.84.4-full
         with:
-          args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder/content
-            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes
+          args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder
+            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes --verbose
+
+      - name: Debug
+        run: find public
 
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
