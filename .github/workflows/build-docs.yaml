@@ -22,8 +22,9 @@ jobs:
         volumes:
           - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
-      # - name: Cleanup workspace
-      #   run: sudo rm -rf public/* content docs-csm
+      - name: Cleanup workspace
+      #  run: sudo rm -rf public/* content docs-csm
+        run: sudo chown -R github-actions-runner.github-actions-runner public content docs-csm
 
       # - name: Setup SSH keys
       #   uses: webfactory/ssh-agent@v0.5.3
