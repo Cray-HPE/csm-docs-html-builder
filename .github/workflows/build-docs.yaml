@@ -77,8 +77,8 @@ jobs:
       - name: Debug
         run: |
           ls -al ${{github.workspace}}/public
-          # curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09
-          curl -v http://localhost:8080/docs-csm/en-09
+          # curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
+          curl -v http://127.0.0.1:8080/docs-csm/
 
       - name: Run link checker
         # Needs to be pre-built and put into artifactory
@@ -86,4 +86,4 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; curl -v http://127.0.0.1:8080/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
