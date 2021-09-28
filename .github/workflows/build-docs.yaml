@@ -20,7 +20,7 @@ jobs:
         ports:
           - 80
         volumes:
-          - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
+          - ${{github.workspace}}/public:/usr/share/nginx/html
     steps:
       - name: Cleanup workspace
         run: sudo rm -rf public content docs-csm
@@ -77,12 +77,12 @@ jobs:
       - name: Debug
         run: |
           ls -al ${{github.workspace}}/public
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
 
-      - name: Run link checker
+      - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
         # uses: docker://filiph/linkcheck
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; curl -v http://nginx/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-09"
