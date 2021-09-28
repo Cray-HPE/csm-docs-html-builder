@@ -30,8 +30,8 @@ jobs:
       #   with:
       #     ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
 
-      # - name: Check out csm-docs-html-builder repository
-      #   uses: actions/checkout@v2
+      - name: Check out csm-docs-html-builder repository
+        uses: actions/checkout@v2
 
       # - name: Checkout docs-csm release banches
       #   run: |
