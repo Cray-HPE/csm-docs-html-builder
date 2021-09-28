@@ -103,11 +103,8 @@ jobs:
         uses: docker://peaceiris/hugo:v0.84.4-full
         with:
           args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder
-            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes --verbose
+            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes
         continue-on-error: true
-
-      - name: Debug
-        run: find public
 
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
@@ -115,7 +112,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-09"
         continue-on-error: true
 
       - name: Run link checker (1.0)
@@ -124,7 +121,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-10"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-10"
         continue-on-error: true
 
       - name: Run link checker (1.1)
@@ -133,7 +130,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-11"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-11"
         continue-on-error: true
 
       - name: Run link checker (1.2)
@@ -142,7 +139,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-12"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-12"
         continue-on-error: true
 
       - name: Publish HTML
