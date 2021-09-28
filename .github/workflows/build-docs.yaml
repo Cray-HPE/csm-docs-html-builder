@@ -35,15 +35,10 @@ jobs:
         with:
           path: csm-docs-html-builder
 
-      - name: Check out docs-csm repository
-        uses: actions/checkout@v2
-        with:
-          repository: git@github.com:Cray-HPE/docs-csm.git
-          path: docs-csm
-
       - name: Checkout docs-csm release branches
         run: |
           set -ex
+          git clone git@github.com:Cray-HPE/docs-csm.git
           mkdir -p csm-docs-html-builder/docs-csm
           for branch in 0.9 1.0 1.1 1.2; do
               git -C docs-csm/ checkout -B release/$branch -t origin/release/$branch
