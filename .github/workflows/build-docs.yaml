@@ -76,10 +76,12 @@ jobs:
 
       - name: Debug
         run: |
-          sudo chown -R github-actions-runner:github-actions-runner ${{github.workspace}}/public
+          set -xv
+          set +e
           ls -al ${{github.workspace}}/public
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
-          docker logs nginx
+          nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
+          docker logs $nginx
 
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
