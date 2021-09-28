@@ -69,11 +69,11 @@ jobs:
       #     gen_index_content content $relative_path >> content/_index.md
       #     ls -al content/
 
-      - name: Run Hugo processor
-        uses: docker://peaceiris/hugo:v0.84.4-full
-        with:
-          args: --config /github/workspace/config.toml --source /github/workspace/content
-            --destination /github/workspace/public --themesDir /github/workspace/themes
+      #- name: Run Hugo processor
+      #  uses: docker://peaceiris/hugo:v0.84.4-full
+      #  with:
+      #    args: --config /github/workspace/config.toml --source /github/workspace/content
+      #      --destination /github/workspace/public --themesDir /github/workspace/themes
 
       - name: Debug
         run: |
