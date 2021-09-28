@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -exv
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 
@@ -131,7 +131,4 @@ delete_dir_contents $DESTINATION_DIR
 
 crawl_directory $SOURCE_DIR
 populate_missing_index_files
-# Ignore errors in apply_specific_fixes
-set +e
 apply_specific_fixes
-set -e
