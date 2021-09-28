@@ -43,6 +43,7 @@ jobs:
           for branch in 0.9 1.0 1.1 1.2; do
               git -C docs-csm/ checkout -B release/$branch -t origin/release/$branch
               cp -r docs-csm/ csm-docs-html-builder/docs-csm/$branch
+              ls -al csm-docs-html-builder/docs-csm/$branch
           done
           mkdir -p ./content
 
@@ -138,9 +139,7 @@ jobs:
       - name: Publish HTML
         run: |
           set -ex
-          cd docs-csm
-          git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
-          cd ..
+          git -C docs-csm checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
           cp -r public/* docs-csm/
           cd docs-csm
