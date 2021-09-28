@@ -22,57 +22,57 @@ jobs:
         volumes:
           - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
-      - name: Cleanup workspace
-        run: sudo rm -rf public/* content docs-csm
+      # - name: Cleanup workspace
+      #   run: sudo rm -rf public/* content docs-csm
 
-      - name: Setup SSH keys
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
+      # - name: Setup SSH keys
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
 
-      - name: Check out csm-docs-html-builder repository
-        uses: actions/checkout@v2
+      # - name: Check out csm-docs-html-builder repository
+      #   uses: actions/checkout@v2
 
-      - name: Checkout docs-csm release banches
-        run: |
-          set -ex
-          for branch in 0.9 1.0 1.1 1.2; do
-            mkdir -p ./docs-csm/tmp
-            cd ./docs-csm/tmp
-            git clone git@github.com:Cray-HPE/docs-csm.git
-            mv docs-csm ../$branch
-            cd ../$branch
-            git config pull.ff only
-            git fetch
-            git checkout "release/$branch" && git pull origin "release/$branch"
-            cd ../..
-            sudo rm -rf docs-csm/tmp
-          done
-          mkdir -p ./content
+      # - name: Checkout docs-csm release banches
+      #   run: |
+      #     set -ex
+      #     for branch in 0.9 1.0 1.1 1.2; do
+      #       mkdir -p ./docs-csm/tmp
+      #       cd ./docs-csm/tmp
+      #       git clone git@github.com:Cray-HPE/docs-csm.git
+      #       mv docs-csm ../$branch
+      #       cd ../$branch
+      #       git config pull.ff only
+      #       git fetch
+      #       git checkout "release/$branch" && git pull origin "release/$branch"
+      #       cd ../..
+      #       sudo rm -rf docs-csm/tmp
+      #     done
+      #     mkdir -p ./content
 
-      - name: Prepare pages for Hugo processor (0.9)
-        uses: docker://ubuntu
-        env:
-          CSM_BRANCH: 0.9
-        with:
-          entrypoint: /github/workspace/bin/convert-docs-to-hugo.sh
-          args: --source /github/workspace/docs-csm/ --destination /github/workspace/content/
+      # - name: Prepare pages for Hugo processor (0.9)
+      #   uses: docker://ubuntu
+      #   env:
+      #     CSM_BRANCH: 0.9
+      #   with:
+      #     entrypoint: /github/workspace/bin/convert-docs-to-hugo.sh
+      #     args: --source /github/workspace/docs-csm/ --destination /github/workspace/content/
 
-      - name: Creating root indexes
-        run: |
-          set -ex
-          source ./bin/lib/*
-          echo "Creating root _index.md"
-          gen_hugo_yaml "CSM Documentation" > content/_index.md
-          gen_index_header "CSM Documentation" >> content/_index.md
-          gen_index_content content $relative_path >> content/_index.md
-          ls -al content/
+      # - name: Creating root indexes
+      #   run: |
+      #     set -ex
+      #     source ./bin/lib/*
+      #     echo "Creating root _index.md"
+      #     gen_hugo_yaml "CSM Documentation" > content/_index.md
+      #     gen_index_header "CSM Documentation" >> content/_index.md
+      #     gen_index_content content $relative_path >> content/_index.md
+      #     ls -al content/
 
-      - name: Run Hugo processor
-        uses: docker://peaceiris/hugo:v0.84.4-full
-        with:
-          args: --config /github/workspace/config.toml --source /github/workspace/content
-            --destination /github/workspace/public --themesDir /github/workspace/themes
+      # - name: Run Hugo processor
+      #   uses: docker://peaceiris/hugo:v0.84.4-full
+      #   with:
+      #     args: --config /github/workspace/config.toml --source /github/workspace/content
+      #       --destination /github/workspace/public --themesDir /github/workspace/themes
 
       - name: Debug
         run: |
