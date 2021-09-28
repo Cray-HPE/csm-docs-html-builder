@@ -68,11 +68,11 @@ jobs:
       #     gen_index_content content $relative_path >> content/_index.md
       #     ls -al content/
 
-      # - name: Run Hugo processor
-      #   uses: docker://peaceiris/hugo:v0.84.4-full
-      #   with:
-      #     args: --config /github/workspace/config.toml --source /github/workspace/content
-      #       --destination /github/workspace/public --themesDir /github/workspace/themes
+      - name: Run Hugo processor
+        uses: docker://peaceiris/hugo:v0.84.4-full
+        with:
+          args: --config /github/workspace/config.toml --source /github/workspace/content
+            --destination /github/workspace/public --themesDir /github/workspace/themes
 
       - name: Debug
         run: |
@@ -82,7 +82,6 @@ jobs:
           ls -al public/
           nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
           docker exec $nginx ls -al /usr/share/nginx/html/ /usr/share/nginx/html/docs-csm/
-          docker inspect $nginx
 
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
