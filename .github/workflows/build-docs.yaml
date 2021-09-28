@@ -20,10 +20,10 @@ jobs:
         ports:
           - 80
         volumes:
-          - ${{github.workspace}}/public:/usr/share/nginx/html
+          - ${{github.workspace}}/html:/usr/share/nginx/html
     steps:
       - name: Cleanup workspace
-        run: sudo rm -rf public/* content docs-csm
+        run: sudo rm -rf public content docs-csm
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -78,7 +78,9 @@ jobs:
         run: |
           set -xv
           set +e
-          ls -al ${{github.workspace}}/public
+          mkdir -p html/docs-csm
+          mv public/* html/docs-csm/
+          ls -al html/docs-csm/
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
           nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
           docker exec $nginx ls -al /usr/share/nginx /usr/share/nginx/html
