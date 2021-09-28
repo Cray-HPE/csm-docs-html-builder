@@ -23,7 +23,7 @@ jobs:
           - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
       - name: Cleanup workspace
-        run: sudo rm -rf public/* csm-docs-html-builder
+        run: sudo rm -rf public/* csm-docs-html-builder docs-csm
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -132,3 +132,42 @@ jobs:
         with:
           entrypoint: bash
           args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-12"
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+
+      - name: Publish HTML
+        run: |
+          set -ex
+          git clone git@github.com:Cray-HPE/docs-csm.git
+          cd docs-csm
+          git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
+          cd ..
+          rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
+          cp -r csm-docs-html-builder/public/* docs-csm/
+          cd docs-csm
+          git add .
+          git commit -m "Generated HTML from docs-csm revision <TBH>"
+          git push origin release/docs-html
