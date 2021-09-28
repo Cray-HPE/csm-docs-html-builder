@@ -43,9 +43,8 @@ jobs:
           for branch in 0.9 1.0 1.1 1.2; do
               git -C docs-csm/ checkout -B release/$branch -t origin/release/$branch
               cp -r docs-csm/ csm-docs-html-builder/docs-csm/$branch
-              ls -al csm-docs-html-builder/docs-csm/$branch
           done
-          mkdir -p ./content
+          mkdir -p csm-docs-html-builder//content
 
       - name: Prepare pages for Hugo processor (0.9)
         uses: docker://ubuntu
