@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Cleanup workspace
       #  run: sudo rm -rf public/* content docs-csm
-        run: sudo chown -R github-actions-runner.github-actions-runner public content docs-csm
+        run: sudo chown -R github-actions-runner.github-actions-runner .
 
       # - name: Setup SSH keys
       #   uses: webfactory/ssh-agent@v0.5.3
