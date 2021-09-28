@@ -116,7 +116,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug http://nginx/docs-csm/en-09"
 
       - name: Run link checker (1.0)
         # Needs to be pre-built and put into artifactory
@@ -124,7 +124,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-10"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug http://nginx/docs-csm/en-10"
 
       - name: Run link checker (1.1)
         # Needs to be pre-built and put into artifactory
@@ -132,7 +132,7 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-11"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug http://nginx/docs-csm/en-11"
 
       - name: Run link checker (1.1)
         # Needs to be pre-built and put into artifactory
@@ -140,4 +140,4 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-12"
+          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug http://nginx/docs-csm/en-12"
