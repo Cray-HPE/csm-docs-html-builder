@@ -85,4 +85,4 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; curl -v http://nginx:${{ job.services.nginx.ports['80'] }}/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://nginx:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; curl -v http://nginx/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://nginx/docs-csm/en-09"
