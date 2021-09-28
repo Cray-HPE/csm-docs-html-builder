@@ -35,23 +35,22 @@ jobs:
         with:
           path: csm-docs-html-builder
 
-      - name: Checkout docs-csm release banches
+      - name: Check out docs-csm repository
+        uses: actions/checkout@v2
+        with:
+          repository: git@github.com:Cray-HPE/docs-csm.git
+          ref: release/*
+          path: docs-csm
+
+      - name: Checkout docs-csm release branches
         run: |
           set -ex
+          mkdir -p csm-docs-html-builder/docs-csm
           for branch in 0.9 1.0 1.1 1.2; do
-            mkdir -p ./docs-csm/tmp
-            cd ./docs-csm/tmp
-            git clone git@github.com:Cray-HPE/docs-csm.git
-            mv docs-csm ../$branch
-            cd ../$branch
-            git config pull.ff only
-            git fetch
-            git checkout "release/$branch" && git pull origin "release/$branch"
-            cd ../..
-            sudo rm -rf docs-csm/tmp
+              git -C docs-csm/ checkout -B release/$branch -t origin/release/$branch
+              cp -r docs-csm/ csm-docs-html-builder/docs-csm/$branch
           done
           mkdir -p ./content
-        working-directory: csm-docs-html-builder
 
       - name: Prepare pages for Hugo processor (0.9)
         uses: docker://ubuntu
@@ -145,7 +144,6 @@ jobs:
       - name: Publish HTML
         run: |
           set -ex
-          git clone git@github.com:Cray-HPE/docs-csm.git
           cd docs-csm
           git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
           cd ..
