@@ -39,7 +39,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: git@github.com:Cray-HPE/docs-csm.git
-          ref: release/*
           path: docs-csm
 
       - name: Checkout docs-csm release branches
