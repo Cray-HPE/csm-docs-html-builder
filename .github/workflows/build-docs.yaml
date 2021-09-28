@@ -33,7 +33,7 @@ jobs:
       - name: Check out csm-docs-html-builder repository
         uses: actions/checkout@v2
 
-      - name: Checkout release banches
+      - name: Checkout docs-csm release banches
         run: |
           set -ex
           for branch in 0.9 1.0 1.1 1.2; do
@@ -84,5 +84,5 @@ jobs:
         # uses: docker://filiph/linkcheck
         uses: docker://google/dart
         with:
-            entrypoint: bash
-            args: -c "pub global activate linkcheck; /root/.pub-cache/bin/linkcheck http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
+          entrypoint: bash
+          args: -c "pub global activate linkcheck; ls -al /root/.pub-cache/bin; /root/.pub-cache/bin/linkcheck http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
