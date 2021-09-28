@@ -78,12 +78,10 @@ jobs:
         run: |
           set -xv
           set +e
-          mkdir -p html/docs-csm
-          mv public/* html/docs-csm/
-          ls -al html/docs-csm/
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
+          ls -al public/
           nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
-          docker exec $nginx ls -al /usr/share/nginx /usr/share/nginx/html
+          docker exec $nginx ls -al /usr/share/nginx/html/ /usr/share/nginx/html/docs-csm/
           docker inspect $nginx
 
       - name: Run link checker (0.9)
