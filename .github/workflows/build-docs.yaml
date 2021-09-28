@@ -74,8 +74,8 @@ jobs:
       - name: Run Hugo processor
         uses: docker://peaceiris/hugo:v0.84.4-full
         with:
-          args: --config /github/workspace/config.toml --source /github/workspace/content
-            --destination /github/workspace/csm-docs-html-builder/public --themesDir /github/workspace/themes
+          args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder/content
+            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes
 
       - name: Debug
         run: |
