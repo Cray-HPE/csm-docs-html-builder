@@ -23,7 +23,7 @@ jobs:
           - ${{github.workspace}}/public:/usr/share/nginx/html
     steps:
       - name: Cleanup workspace
-        run: sudo rm -rf public content docs-csm
+        run: sudo rm -rf public/* content docs-csm
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -48,7 +48,7 @@ jobs:
             cd ../..
             sudo rm -rf docs-csm/tmp
           done
-          mkdir -p ./content ./public
+          mkdir -p ./content
 
       - name: Prepare pages for Hugo processor (0.9)
         uses: docker://ubuntu
