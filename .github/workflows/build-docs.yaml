@@ -101,15 +101,6 @@ jobs:
           args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder/content
             --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes
 
-      - name: Debug
-        run: |
-          set -xv
-          set +e
-          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
-          ls -al public/
-          nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
-          docker exec $nginx ls -al /usr/share/nginx/html/ /usr/share/nginx/html/docs-csm/
-
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
         # uses: docker://filiph/linkcheck
@@ -134,7 +125,7 @@ jobs:
           entrypoint: bash
           args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --debug --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-11"
 
-      - name: Run link checker (1.1)
+      - name: Run link checker (1.2)
         # Needs to be pre-built and put into artifactory
         # uses: docker://filiph/linkcheck
         uses: docker://google/dart
