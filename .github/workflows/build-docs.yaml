@@ -20,10 +20,10 @@ jobs:
         ports:
           - 80
         volumes:
-          - ${{github.workspace}}/html:/usr/share/nginx/html
+          - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
       - name: Cleanup workspace
-        run: sudo rm -rf public content docs-csm
+        run: sudo rm -rf public/* content docs-csm
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
