@@ -18,7 +18,7 @@ jobs:
       nginx:
         image: nginx
         ports:
-          - 8080:80
+          - 80
         volumes:
           - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
     steps:
@@ -77,13 +77,7 @@ jobs:
       - name: Debug
         run: |
           ls -al ${{github.workspace}}/public
-          # curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
-          curl -v http://127.0.0.1:8080/docs-csm/
-
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJSON(job) }}
-        run: echo "$JOB_CONTEXT"
+          curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
 
       - name: Run link checker
         # Needs to be pre-built and put into artifactory
@@ -91,4 +85,4 @@ jobs:
         uses: docker://google/dart
         with:
           entrypoint: bash
-          args: -c "pub global activate linkcheck; curl -v http://127.0.0.1:80/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://localhost/docs-csm/en-09"
+          args: -c "pub global activate linkcheck; curl -v http://nginx:${{ job.services.nginx.ports['80'] }}/docs-csm/; ${HOME}/.pub-cache/bin/linkcheck http://nginx:${{ job.services.nginx.ports['80'] }}/docs-csm/en-09"
