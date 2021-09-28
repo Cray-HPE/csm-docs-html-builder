@@ -100,6 +100,7 @@ jobs:
         with:
           args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder
             --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes --verbose
+        continue-on-error: true
 
       - name: Debug
         run: find public
