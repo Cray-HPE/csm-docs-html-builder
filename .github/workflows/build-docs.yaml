@@ -80,6 +80,11 @@ jobs:
           # curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/docs-csm/
           curl -v http://127.0.0.1:8080/docs-csm/
 
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+
       - name: Run link checker
         # Needs to be pre-built and put into artifactory
         # uses: docker://filiph/linkcheck
