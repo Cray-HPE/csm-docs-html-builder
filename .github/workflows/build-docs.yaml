@@ -82,6 +82,7 @@ jobs:
           curl -v http://localhost:${{ job.services.nginx.ports['80'] }}/
           nginx=$(docker ps --format '{{.Image}} {{.Names}}' | grep nginx | awk '{ print $2 }')
           docker logs $nginx
+          docker exec $nginx ls -al /usr/share/nginx/html
 
       - name: Run link checker (0.9)
         # Needs to be pre-built and put into artifactory
