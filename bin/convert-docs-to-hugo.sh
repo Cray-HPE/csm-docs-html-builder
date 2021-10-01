@@ -26,8 +26,8 @@ function validate_args() {
 
     # Validate source directory
     [[ ! -d $2 ]] && help
-    if [[ ! -d $2/1.0 ]]; then
-        echo "Expected --source to point to the docs-csm repo.  Didn't find 1.0 directory."
+    if [[ ! -d $2/$CSM_BRANCH ]]; then
+        echo "Expected --source to point to the docs-csm repo.  Didn't find $CSM_BRANCH directory."
         help
     fi
 
