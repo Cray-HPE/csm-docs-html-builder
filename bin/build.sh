@@ -71,3 +71,4 @@ function test_links() {
 test_links
 
 cd $LAST_DIR
+
