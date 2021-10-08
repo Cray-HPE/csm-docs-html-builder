@@ -61,7 +61,8 @@ function transform_links() {
     cat $1 | \
     grep -v "stash.us.cray.com" | \
     sed -r 's|\]\(\/|\]\(\.\/|g' | \
-    sed -r '/http/b; s|\]\((.*).md(#.*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
+    sed -r '/http/b; s|\]\(([^)]\*).md(#.*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
+    sed -r 's|\]\(([^)]*)\.(png\|svg)(#.*)?\)|\]\(\.\./\1\.\2\)|g' | \
     sed 's|\"\"|\"|g' | \
     sed 's|index.md|_index.md|g'
 }
