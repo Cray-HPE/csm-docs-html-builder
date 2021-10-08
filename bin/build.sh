@@ -66,9 +66,8 @@ function test_links() {
   linkcheck_en_09 linkcheck_en_10 linkcheck_en_11 linkcheck_en_12 | tee -a csm_docs_build.log
 
   # Tear it all down
-  docker-compose -f $THIS_DIR/compose/test.yml down
+  #docker-compose -f $THIS_DIR/compose/test.yml down
 }
 test_links
 
 cd $LAST_DIR
-
