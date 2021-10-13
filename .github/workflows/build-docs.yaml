@@ -1,6 +1,7 @@
 name: Generate CSM Docs
 
 on:
+  push:
   schedule:
    # 3AM UTC / 11PM EST / 8PM PST
    - cron:  '0 3 * * *'
@@ -133,6 +134,7 @@ jobs:
         continue-on-error: true
 
       - name: Publish HTML
+        if: success() && github.ref == 'refs/heads/master'
         run: |
           set -ex
           git -C docs-csm checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
