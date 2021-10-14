@@ -20,6 +20,9 @@ disableLandingPageButton = true
     languageName = "0.9"
     weight = 10
     landingPageURL = "/docs-csm/en-09"
+    # Support for raw html for <a name=""> anchor links
+    [markup.goldmark.renderer]
+    unsafe= true
   [languages.en-10]
     contentDir = "content/1.0"
     languageName = "1.0"

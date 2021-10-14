@@ -7,14 +7,14 @@ function help() {
     cat <<-MSG
 Description:
 This script recursively copies and transforms markdown files from a source directory into a destination
-directory for use by the Hugo static website engine. It expects two named arguments where --source is 
-the path to the docs-csm repo and --destination is the path to the hugo content folder.  The content 
+directory for use by the Hugo static website engine. It expects two named arguments where --source is
+the path to the docs-csm repo and --destination is the path to the hugo content folder.  The content
 folder will be deleted and recreated.
 
 This script also looks for an environment variable named CSM_BRANCH in order to place content in the
 appropriate subdirectory which maps to a Hugo "language".
 
-Example: 
+Example:
 ./convert-docs-to-hugo.sh --source [path to docs-csm] --destination [path to hugo content]
 
 MSG

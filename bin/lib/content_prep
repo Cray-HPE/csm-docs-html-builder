@@ -56,12 +56,16 @@ function transform_links() {
     # - Skips internal stash links
     # - root links to relative links
     # - wraps links in hugo's refrel lookup unless it has "http"
+    # - fixes image references
+    # - replaces <a name="anchor"> format for hugo anchor ref formats
     # - changes index.md to _index.md
     # e.g. [Who]({{< relref "./about.md#who" >}})
     cat $1 | \
     grep -v "stash.us.cray.com" | \
     sed -r 's|\]\(\/|\]\(\.\/|g' | \
-    sed -r '/http/b; s|\]\((.*).md(#.*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
+    sed -r 's|\]\(([^)|:]*).md(#.*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
+    sed -r 's|\]\(([^)|:]*)\.(png\|svg)(#.*)?\)|\]\(\.\./\1\.\2\)|g' | \
+    sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
     sed 's|\"\"|\"|g' | \
     sed 's|index.md|_index.md|g'
 }
