@@ -10,18 +10,12 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    timeout-minutes: 30
-    # TODO: Use matrix strategy when/if we have persistence layer between jobs
-    services:
-      nginx:
-        image: nginx
-        ports:
-          - 80
-        volumes:
-          - ${{github.workspace}}/public:/usr/share/nginx/html/docs-csm
+    timeout-minutes: 60
     steps:
-      - name: Cleanup workspace
-        run: sudo rm -rf public/* csm-docs-html-builder docs-csm
+      - name: Cleanup runner
+        run: |
+          # Containers may have written files owned by root onto mounted volumes
+          sudo rm -rf csm-docs-html-builder
 
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
@@ -33,114 +27,11 @@ jobs:
         with:
           path: csm-docs-html-builder
 
-      - name: Checkout docs-csm release branches
-        run: |
-          set -ex
-          git clone git@github.com:Cray-HPE/docs-csm.git
-          mkdir -p csm-docs-html-builder/docs-csm
-          for branch in 0.9 1.0 1.1 1.2; do
-              git -C docs-csm/ checkout -B release/$branch -t origin/release/$branch
-              cp -r docs-csm/ csm-docs-html-builder/docs-csm/$branch
-          done
-          mkdir -p csm-docs-html-builder//content
-
-      - name: Prepare pages for Hugo processor (0.9)
-        uses: docker://ubuntu
-        env:
-          CSM_BRANCH: "0.9"
-        with:
-          entrypoint: /github/workspace/csm-docs-html-builder/bin/convert-docs-to-hugo.sh
-          args: --source /github/workspace/csm-docs-html-builder/docs-csm/ --destination /github/workspace/csm-docs-html-builder/content/
-        continue-on-error: true
-
-      - name: Prepare pages for Hugo processor (1.0)
-        uses: docker://ubuntu
-        env:
-          CSM_BRANCH: "1.0"
-        with:
-          entrypoint: /github/workspace/csm-docs-html-builder/bin/convert-docs-to-hugo.sh
-          args: --source /github/workspace/csm-docs-html-builder/docs-csm/ --destination /github/workspace/csm-docs-html-builder/content/
-        continue-on-error: true
-
-      - name: Prepare pages for Hugo processor (1.1)
-        uses: docker://ubuntu
-        env:
-          CSM_BRANCH: "1.1"
-        with:
-          entrypoint: /github/workspace/csm-docs-html-builder/bin/convert-docs-to-hugo.sh
-          args: --source /github/workspace/csm-docs-html-builder/docs-csm/ --destination /github/workspace/csm-docs-html-builder/content/
-        continue-on-error: true
-
-      - name: Prepare pages for Hugo processor (1.2)
-        uses: docker://ubuntu
-        env:
-          CSM_BRANCH: "1.2"
-        with:
-          entrypoint: /github/workspace/csm-docs-html-builder/bin/convert-docs-to-hugo.sh
-          args: --source /github/workspace/csm-docs-html-builder/docs-csm/ --destination /github/workspace/csm-docs-html-builder/content/
-        continue-on-error: true
-
-      - name: Creating root indexes
-        run: |
-          set -ex
-          source ./bin/lib/*
-          echo "Creating root _index.md"
-          gen_hugo_yaml "CSM Documentation" > content/_index.md
-          gen_index_header "CSM Documentation" >> content/_index.md
-          gen_index_content content $relative_path >> content/_index.md
+      - name: Run generator
+        run: ./bin/build.sh
         working-directory: csm-docs-html-builder
 
-      - name: Run Hugo processor
-        uses: docker://peaceiris/hugo:v0.84.4-full
-        with:
-          args: --config /github/workspace/csm-docs-html-builder/config.toml --source /github/workspace/csm-docs-html-builder
-            --destination /github/workspace/public --themesDir /github/workspace/csm-docs-html-builder/themes
-        continue-on-error: true
-
-      - name: Run link checker (0.9)
-        # Needs to be pre-built and put into artifactory
-        # uses: docker://filiph/linkcheck
-        uses: docker://google/dart
-        with:
-          entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-09"
-        continue-on-error: true
-
-      - name: Run link checker (1.0)
-        # Needs to be pre-built and put into artifactory
-        # uses: docker://filiph/linkcheck
-        uses: docker://google/dart
-        with:
-          entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-10"
-        continue-on-error: true
-
-      - name: Run link checker (1.1)
-        # Needs to be pre-built and put into artifactory
-        # uses: docker://filiph/linkcheck
-        uses: docker://google/dart
-        with:
-          entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-11"
-        continue-on-error: true
-
-      - name: Run link checker (1.2)
-        # Needs to be pre-built and put into artifactory
-        # uses: docker://filiph/linkcheck
-        uses: docker://google/dart
-        with:
-          entrypoint: bash
-          args: -c "pub global activate linkcheck; ${HOME}/.pub-cache/bin/linkcheck --hosts http://nginx/docs-csm/** http://nginx/docs-csm/en-12"
-        continue-on-error: true
-
-      - name: Publish HTML
+      - name: Push generated HTML
         if: success() && github.ref == 'refs/heads/master'
-        run: |
-          set -ex
-          git -C docs-csm checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
-          rm -rf docs-csm/* docs-csm/.github docs-csm/.gitignore docs-csm/.version
-          cp -r public/* docs-csm/
-          cd docs-csm
-          git add .
-          git commit -m "Generated HTML from docs-csm with ${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}"
-          git push origin release/docs-html
+        run: ./bin/push.sh
+        working-directory: csm-docs-html-builder
