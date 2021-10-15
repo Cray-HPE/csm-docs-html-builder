@@ -10,7 +10,7 @@ git_sha=$(git log -1 --format=%h)
 git checkout -b release/docs-html -t origin/release/docs-html || git checkout --orphan release/docs-html
 cd ../..
 rm -rf docs-csm/docs-csm/* docs-csm/docs-csm/.github docs-csm/docs-csm/.gitignore docs-csm/docs-csm/.version
-cp -r csm-docs-html-builder/public/* docs-csm/docs-csm/
+cp -r public/* docs-csm/docs-csm/
 cd docs-csm/docs-csm
 git add .
 git commit -m "Generated HTML from docs-csm revision ${git_sha}"
