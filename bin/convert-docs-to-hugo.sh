@@ -113,8 +113,10 @@ function populate_missing_index_files() {
 }
 
 function apply_specific_fixes() {
+    set +e
     [[ $CSM_BRANCH != "0.9" ]] && mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
     mv $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/README.md $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/_index.md
+    set -e
 }
 
 function delete_dir_contents() {
