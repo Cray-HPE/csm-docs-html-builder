@@ -10,5 +10,5 @@ rm -rf docs-csm/docs-csm/* docs-csm/docs-csm/.github docs-csm/docs-csm/.gitignor
 cp -r public/* docs-csm/docs-csm/
 cd docs-csm/docs-csm
 git add .
-git commit -m "Generated HTML from docs-csm revision ${git_sha}"
+git commit -m "Generated HTML from docs-csm"
 git push origin release/docs-html
