@@ -69,12 +69,13 @@ function crawl_directory() {
 function process_file() {
     oldtitle=$(get_old_title $1)
     newtitle=$(make_new_title "${oldtitle}")
-    if [[ -z $newtitle ]]; then
-        echo $1
-        echo "Old Title: $oldtitle"
-        echo "No title found"
-        exit 1
-    fi
+    # Exiting with code 1 here does not throw error - just stops processing half way done
+    # if [[ -z $newtitle ]]; then
+    #     echo $1
+    #     echo "Old Title: $oldtitle"
+    #     echo "No title found"
+    #     exit 1
+    # fi
     filename=$(basename $1)
     mid_path=$(echo -n $1 | sed "s|${SOURCE_DIR}||" | sed "s|${filename}||")
     [[ $filename == "index.md" ]] && filename="_index.md"
