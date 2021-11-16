@@ -23,18 +23,12 @@ clean
 function build () {
   echo "Cloning into docs-csm..."
 
+  mkdir -p ./docs-csm
+  cd ./docs-csm
   for branch in ${BRANCHES[@]}; do
-    mkdir -p ./docs-csm/tmp
-    cd ./docs-csm/tmp
-    BACK_DIR=${OLDPWD}
-    git clone git@github.com:Cray-HPE/docs-csm.git
-    mv docs-csm ../$branch
-    cd ../$branch
-    git fetch
-    git checkout "release/$branch" && git pull origin "release/$branch"
-    cd $BACK_DIR
-    sudo rm -rf docs-csm/tmp
+    git clone --depth 1 -b release/$branch git@github.com:Cray-HPE/docs-csm.git ./$branch
   done
+  cd ${OLDPWD}
 
   echo "Preparing markdown for Hugo..."
   docker-compose -f $THIS_DIR/compose/hugo_prep.yml up \
