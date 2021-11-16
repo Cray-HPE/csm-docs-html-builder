@@ -80,14 +80,14 @@ function process_file() {
     mid_path=$(echo -n $1 | sed "s|${SOURCE_DIR}||" | sed "s|${filename}||")
     [[ $filename == "index.md" ]] && filename="_index.md"
     destination_file="${DESTINATION_DIR}/${mid_path}/${filename}"
-    echo -n "New Title: ${newtitle} - Transforming ${1} into ${destination_file}...  "
+    # echo -n "New Title: ${newtitle} - Transforming ${1} into ${destination_file}...  "
 
     # Add the yaml metadata to the top of the new file
     gen_hugo_yaml "$newtitle" > $destination_file
 
     # Add the file content.
     transform_links $1 >> $destination_file
-    echo "done."
+    # echo "done."
 }
 
 function get_old_title() {
