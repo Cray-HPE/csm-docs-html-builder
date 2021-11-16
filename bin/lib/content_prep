@@ -52,14 +52,15 @@ function transform_links() {
     # $1 is the file content
 
     # Adds hugo's relref function to transform relative links during build step.
+    # e.g. [Who]({{< relref "./about.md#who" >}})
     # Converts:
     # - Skips internal stash links
     # - root links to relative links
     # - wraps links in hugo's refrel lookup unless it has "http"
     # - fixes image references
     # - replaces <a name="anchor"> format for hugo anchor ref formats
-    # - changes index.md to _index.md
-    # e.g. [Who]({{< relref "./about.md#who" >}})
+    # - changes index.md to '' - for some reason Hugo silently puts empty href, if source href points
+    #   to _index.md file. So we just point to directory instead.
     cat $1 | \
     grep -v "stash.us.cray.com" | \
     sed -r 's|\]\(\/|\]\(\.\/|g' | \
@@ -67,7 +68,7 @@ function transform_links() {
     sed -r 's|\]\(([^)|:]*)\.(png\|svg)(#.*)?\)|\]\(\.\./\1\.\2\)|g' | \
     sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
     sed 's|\"\"|\"|g' | \
-    sed 's|index.md|_index.md|g'
+    sed 's|index.md||g'
 }
 
 function gen_hugo_yaml() {
