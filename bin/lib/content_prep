@@ -7,6 +7,7 @@ function make_new_title() {
     sed -r 's`^#+ ``' | \
     sed -r 's`CSM``' | sed 's`csm``g' | sed 's`()``g' | \
     sed -r 's`^ +``' | \
+    sed 's|`||g' | \
     sed 's`:``g' | \
     sed 's`_` `g' | \
     sed -r 's`<.*>.*<.*>``' | \
