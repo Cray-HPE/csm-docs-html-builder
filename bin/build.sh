@@ -65,10 +65,14 @@ function build () {
   gen_index_content content $relative_path >> content/_index.md
 
   echo "Build html pages with Hugo..."
+  set +e
   docker-compose -f $THIS_DIR/compose/hugo_build.yml up \
-    --force-recreate --no-color --remove-orphans --abort-on-container-exit | \
+    --force-recreate --no-color --remove-orphans --abort-on-container-exit --exit-code-from hugo_build | \
   tee -a csm_docs_build.log
+  exit_code=${PIPESTATUS[0]}
   docker-compose -f $THIS_DIR/compose/hugo_build.yml down
+  set -e
+  return ${exit_code}
 }
 build
 
