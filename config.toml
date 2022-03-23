@@ -5,6 +5,7 @@ languageCode = "en-US"
 defaultContentLanguage = "en-10"
 defaultContentLanguageInSubdir = true
 showVisitedLinks = true
+refLinksErrorLevel = "WARNING"
 
 [outputs]
 home = ["HTML", "RSS", "JSON" ]
