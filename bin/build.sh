@@ -27,7 +27,7 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 cd $THIS_DIR/..
 LAST_DIR=${OLDPWD}
-BRANCHES=(0.9 1.0 1.1 1.2)
+BRANCHES=(0.9 1.0 1.2)
 
 function clean() {
   function clean_dir() {
