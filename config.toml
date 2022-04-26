@@ -29,11 +29,11 @@ disableLandingPageButton = true
     languageName = "1.0"
     weight = 20
     landingPageURL = "/docs-csm/en-10"
-  [languages.en-11]
-    contentDir = "content/1.1"
-    languageName = "1.1"
-    weight = 30
-    landingPageURL = "/docs-csm/en-11"
+  #[languages.en-11]
+  #  contentDir = "content/1.1"
+  #  languageName = "1.1"
+  #  weight = 30
+  #  landingPageURL = "/docs-csm/en-11"
   [languages.en-12]
     contentDir = "content/1.2"
     languageName = "1.2"
