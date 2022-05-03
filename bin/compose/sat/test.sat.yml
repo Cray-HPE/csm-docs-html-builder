@@ -1,0 +1,76 @@
+#
+# MIT License
+#
+# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#
+version: '3'
+
+services:
+
+  serve_static:
+    container_name: sat_local_nginx
+    image: nginx
+    volumes:
+      - ${PWD}/public:/usr/share/nginx/html/docs-sat:ro
+    ports:
+      - "80:80"
+    networks:
+      sat_documentation:
+        ipv4_address: 10.253.252.2
+  linkcheck_en_21:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: sat_docs_linkcheck_21
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.252.2/docs-sat/en-21
+    networks:
+      sat_documentation:
+        ipv4_address: 10.253.252.3
+  linkcheck_en_22:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: sat_docs_linkcheck_22
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.252.2/docs-sat/en-22
+    networks:
+      sat_documentation:
+        ipv4_address: 10.253.252.4
+  linkcheck_en_23:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: sat_docs_linkcheck_23
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.252.2/docs-sat/en-23
+    networks:
+      sat_documentation:
+        ipv4_address: 10.253.252.5
+networks:
+  sat_documentation:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.253.252.0/24

@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #
 # MIT License
 #
@@ -22,29 +21,49 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-set -ex
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-cd $THIS_DIR/..
-LAST_DIR=${OLDPWD}
 
-# Default product is CSM to maintain backward compatibility
-PRODUCT_NAME=${1:-csm}
-# shellcheck source=conf/csm.sh
-source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
+version: '3'
 
-function test_links() {
-  echo "Test links in HTML pages..."
-
-  # Standup the nginx server as a background daemon first
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up --force-recreate --no-color --remove-orphans -d serve_static
-
-  # Crawl the links for each version
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up --no-color --remove-orphans \
-  "${LINKCHECK_SERVICE_NAMES[@]}" | tee -a csm_docs_build.log
-
-  # Tear it all down
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" down
-}
-test_links
-
-cd $LAST_DIR
+services:
+  hugo_prep_21:
+    container_name: hugo_prep_21
+    image: ubuntu
+    environment:
+      DOCS_BRANCH: 2.1
+      PRODUCT_NAME: sat
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-sat/
+      - --destination
+      - /src/content/
+  hugo_prep_22:
+    container_name: hugo_prep_22
+    image: ubuntu
+    environment:
+      DOCS_BRANCH: 2.2
+      PRODUCT_NAME: sat
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-sat/
+      - --destination
+      - /src/content
+  hugo_prep_23:
+    container_name: hugo_prep_23
+    image: ubuntu
+    environment:
+      DOCS_BRANCH: 2.3
+      PRODUCT_NAME: sat
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-sat/
+      - --destination
+      - /src/content

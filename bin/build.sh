@@ -27,7 +27,11 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 cd $THIS_DIR/..
 LAST_DIR=${OLDPWD}
-BRANCHES=(0.9 1.0 1.2)
+
+# Default product is CSM to maintain backward compatibility
+PRODUCT_NAME=${1:-csm}
+# shellcheck source=conf/csm.sh
+source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
 
 function clean() {
   function clean_dir() {
@@ -36,41 +40,44 @@ function clean() {
   }
   clean_dir content
   clean_dir public
-  clean_dir docs-csm
-  [[ -f csm_docs_build.log ]] && rm csm_docs_build.log
-  touch csm_docs_build.log
+  # DOCS_REPO_LOCAL_DIR should be set in $PRODUCT_NAME.sh, but give
+  # it a default so that it doesn't call `sudo rm -rf .` when the
+  # variable is unset.
+  clean_dir "${DOCS_REPO_LOCAL_DIR:-docs-csm}"
+  [[ -f $LOG_FILE ]] && rm "$LOG_FILE"
+  touch "$LOG_FILE"
   docker network prune -f
 }
 clean
 
 function build () {
-  echo "Cloning into docs-csm..."
+  echo "Cloning into ${DOCS_REPO_LOCAL_DIR}..."
 
-  mkdir -p ./docs-csm
-  cd ./docs-csm
-  for branch in ${BRANCHES[@]}; do
-    git clone --depth 1 -b release/$branch git@github.com:Cray-HPE/docs-csm.git ./$branch
+  mkdir -p "$DOCS_REPO_LOCAL_DIR"
+  cd "$DOCS_REPO_LOCAL_DIR"
+  for branch in "${BRANCHES[@]}"; do
+    git clone --depth 1 -b "release/${branch}" "$DOCS_REPO_REMOTE_URL" "./${branch}"
   done
   cd ${OLDPWD}
 
   echo "Preparing markdown for Hugo..."
-  docker-compose -f $THIS_DIR/compose/hugo_prep.yml up \
+  docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" up \
     --force-recreate --no-color --remove-orphans | \
-  tee -a csm_docs_build.log
-  docker-compose -f $THIS_DIR/compose/hugo_prep.yml down
+  tee -a "$LOG_FILE"
+  docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" down
 
   echo "Creating root _index.md"
-  gen_hugo_yaml "CSM Documentation" > content/_index.md
-  gen_index_header "CSM Documentation" >> content/_index.md
-  gen_index_content content $relative_path >> content/_index.md
+  gen_hugo_yaml "$DOC_TITLE" > content/_index.md
+  gen_index_header "$DOC_TITLE" >> content/_index.md
+  gen_index_content content >> content/_index.md
 
   echo "Build html pages with Hugo..."
   set +e
-  docker-compose -f $THIS_DIR/compose/hugo_build.yml up \
+  docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" up \
     --force-recreate --no-color --remove-orphans --abort-on-container-exit --exit-code-from hugo_build | \
-  tee -a csm_docs_build.log
+  tee -a "$LOG_FILE"
   exit_code=${PIPESTATUS[0]}
-  docker-compose -f $THIS_DIR/compose/hugo_build.yml down
+  docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" down
   set -e
   return ${exit_code}
 }

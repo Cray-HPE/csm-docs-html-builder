@@ -26,6 +26,12 @@ set -e
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 
+# Default product is CSM to maintain backward compatibility
+PRODUCT_NAME=${PRODUCT_NAME:-csm}
+# shellcheck source=conf/csm.sh
+source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
+
+
 function help() {
     cat <<-MSG
 Description:
@@ -34,8 +40,11 @@ directory for use by the Hugo static website engine. It expects two named argume
 the path to the docs-csm repo and --destination is the path to the hugo content folder.  The content
 folder will be deleted and recreated.
 
-This script also looks for an environment variable named CSM_BRANCH in order to place content in the
-appropriate subdirectory which maps to a Hugo "language".
+This script also looks for an environment variable named DOCS_BRANCH in order to place content in the
+appropriate subdirectory which maps to a Hugo "language". For backwards compatibility, the variable
+CSM_BRANCH can also be used.
+
+To build products other than CSM, set the PRODUCT_NAME environment variable.
 
 Example:
 ./convert-docs-to-hugo.sh --source [path to docs-csm] --destination [path to hugo content]
@@ -49,8 +58,8 @@ function validate_args() {
 
     # Validate source directory
     [[ ! -d $2 ]] && help
-    if [[ ! -d $2/$CSM_BRANCH ]]; then
-        echo "Expected --source to point to the docs-csm repo.  Didn't find $CSM_BRANCH directory."
+    if [[ ! -d $2/$DOCS_BRANCH ]]; then
+        echo "Expected --source to point to the docs-csm repo.  Didn't find $DOCS_BRANCH directory."
         help
     fi
 
@@ -63,8 +72,8 @@ function validate_args() {
         help
     fi
 
-    if [[ -z $CSM_BRANCH ]]; then
-        echo "Expected a CSM_BRANCH environment variable."
+    if [[ -z $DOCS_BRANCH ]]; then
+        echo "Expected a DOCS_BRANCH or CSM_BRANCH environment variable."
         help
     fi
 }
@@ -101,7 +110,7 @@ function process_file() {
     # fi
     filename=$(basename $1)
     mid_path=$(echo -n $1 | sed "s|${SOURCE_DIR}||" | sed "s|${filename}||")
-    [[ $filename == "index.md" ]] && filename="_index.md"
+    [[ $filename == "${INDEX_FILE_NAME:-index.md}" ]] && filename="_index.md"
     destination_file="${DESTINATION_DIR}/${mid_path}/${filename}"
     # echo -n "New Title: ${newtitle} - Transforming ${1} into ${destination_file}...  "
 
@@ -109,7 +118,7 @@ function process_file() {
     gen_hugo_yaml "$newtitle" > $destination_file
 
     # Add the file content.
-    transform_links $1 >> $destination_file
+    transform_links $1 "$INDEX_FILE_NAME" >> $destination_file
     # echo "done."
 }
 
@@ -135,9 +144,9 @@ function populate_missing_index_files() {
     done
 }
 
-function apply_specific_fixes() {
+function apply_specific_csm_fixes() {
     set +e
-    [[ $CSM_BRANCH != "0.9" ]] && mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
+    [[ $DOCS_BRANCH != "0.9" ]] && mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
     mv $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/README.md $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/_index.md
     set -e
 }
@@ -147,14 +156,17 @@ function delete_dir_contents() {
     mkdir -p $1
 }
 
+DOCS_BRANCH=${DOCS_BRANCH:-$CSM_BRANCH}
 validate_args $1 $2 $3 $4
 SOURCE_DIR=$(cd $2 && pwd)
-SOURCE_DIR=${SOURCE_DIR}/${CSM_BRANCH}
+SOURCE_DIR=${SOURCE_DIR}/${DOCS_BRANCH}
 
 DESTINATION_DIR=$(cd $4 && pwd)
-DESTINATION_DIR="${DESTINATION_DIR}/${CSM_BRANCH}"
+DESTINATION_DIR="${DESTINATION_DIR}/${DOCS_BRANCH}"
 delete_dir_contents $DESTINATION_DIR
 
 crawl_directory $SOURCE_DIR
 populate_missing_index_files
-apply_specific_fixes
+if [[ "$PRODUCT_NAME" == "csm" ]]; then
+    apply_specific_csm_fixes
+fi

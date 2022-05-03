@@ -11,6 +11,7 @@ refLinksErrorLevel = "WARNING"
 home = ["HTML", "RSS", "JSON" ]
 
 [params]
+shortTitle = "Cray System Management"
 themeVariant = "blue"
 disableNextPrev = true
 disableLandingPageButton = true
