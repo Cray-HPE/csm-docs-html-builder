@@ -27,6 +27,11 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source $THIS_DIR/lib/*
 cd $THIS_DIR/..
 
-docker-compose -f $THIS_DIR/compose/test.yml up \
+# Default product is CSM to maintain backward compatibility
+PRODUCT_NAME=${1:-csm}
+# shellcheck source=conf/csm.sh
+source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
+
+docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up \
     --force-recreate --no-color --remove-orphans serve_static
 

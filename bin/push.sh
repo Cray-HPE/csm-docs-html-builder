@@ -22,16 +22,38 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-
+# Script to copy from public/ to the docs repo, and then push the
+# release/docs-html branch.
+#
 set -ex
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-mkdir -p docs-csm
-cd docs-csm
-git clone --depth=1 -b release/docs-html git@github.com:Cray-HPE/docs-csm.git
-cd ..
-rm -rf docs-csm/docs-csm/* docs-csm/docs-csm/.github docs-csm/docs-csm/.gitignore docs-csm/docs-csm/.version
-cp -r public/* docs-csm/docs-csm/
-cd docs-csm/docs-csm
+cd "$THIS_DIR/.."
+
+# Default product is CSM to maintain backward compatibility
+PRODUCT_NAME=${1:-csm}
+# shellcheck source=conf/csm.sh
+source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
+
+# This directory may already exist as it is used by build.sh
+mkdir -p "$DOCS_REPO_LOCAL_DIR"
+# Create an inner directory of the same name (e.g. docs-csm/docs-csmXXX/) to
+# commit changes, where XXX are 3 random characters. Use random characters so
+# that this script can be run multiple times without needing to remove the
+# directory each time.
+DOCS_LOCAL_PUSH_DIR=$(mktemp -d "${DOCS_REPO_LOCAL_DIR}/${DOCS_REPO_LOCAL_DIR}XXX")
+# Clone with --no-checkout so that no extraneous files/directories (e.g.
+# .version, .gitignore, .github) are checked out.
+git clone \
+  --no-checkout \
+  --depth=1 \
+  --branch="$DOCS_HTML_RELEASE_BRANCH" \
+  "$DOCS_REPO_REMOTE_URL" \
+  "$DOCS_LOCAL_PUSH_DIR"
+
+# Add and commit the changes from public/, then push the branch.
+cp -r public/* "$DOCS_LOCAL_PUSH_DIR"
+cd "$DOCS_LOCAL_PUSH_DIR"
 git add .
-git commit -m "Generated HTML from docs-csm"
-git push origin release/docs-html
+pwd
+git commit -m "Generated HTML from $DOCS_REPO_LOCAL_DIR"
+git push origin "$DOCS_HTML_RELEASE_BRANCH"

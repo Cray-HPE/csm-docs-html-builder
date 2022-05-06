@@ -45,7 +45,8 @@ function make_new_title() {
     sed -r 's`[C,c]rus`CRUS`' | \
     sed -r 's`[C,c]an`CAN`' | \
     sed -r 's`[P,p]xe`PXE`' | \
-    sed -r 's`[A,a]cl`ACL`'
+    sed -r 's`[A,a]cl`ACL`' | \
+    sed -r 's`[S,s]at`SAT`'
 }
 
 function transform_links() {
@@ -62,13 +63,14 @@ function transform_links() {
     # - replaces <a name="anchor"> format for hugo anchor ref formats
     # - changes index.md to '' - for some reason Hugo silently puts empty href, if source href points
     #   to _index.md file. So we just point to directory instead.
+    index_file=${2:-index.md}
     cat $1 | \
     grep -v "stash.us.cray.com" | \
     sed -r 's|\]\(\/|\]\(\.\/|g' | \
     sed -r 's|\]\(([^)|:]*).md(#.*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
     sed -r 's|\]\(([^)|:]*)\.(png\|svg)(#.*)?\)|\]\(\.\./\1\.\2\)|g' | \
     sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
-    sed 's|index.md||g'
+    sed "s|$index_file||g"
 }
 
 function gen_hugo_yaml() {
