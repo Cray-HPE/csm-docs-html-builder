@@ -66,3 +66,9 @@ export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_e
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh
 export INDEX_FILE_NAME="README.md"
+
+# The name of a directory (relative to the top level of the repository)
+# containing the documentation source. If this is not set, then the scripts
+# will assume the top level of the repository is the top level of the
+# documentation.
+export SOURCE_SUBDIR="docs"
