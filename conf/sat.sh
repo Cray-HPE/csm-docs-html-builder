@@ -30,7 +30,7 @@ export BRANCHES=("2.3" "2.2" "2.1")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
-export DOCS_REPO_REMOTE_URL="git@github.hpe.com:eli-kamin/docs-sat.git"
+export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-sat.git"
 
 # The name of the log file.
 export LOG_FILE="sat_docs_build.log"
