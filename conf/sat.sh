@@ -30,7 +30,7 @@ export BRANCHES=("2.3" "2.2" "2.1")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
-export DOCS_REPO_REMOTE_URL="git@github.hpe.com:eli-kamin/docs-sat.git"
+export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-sat.git"
 
 # The name of the log file.
 export LOG_FILE="sat_docs_build.log"
@@ -66,3 +66,9 @@ export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_e
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh
 export INDEX_FILE_NAME="README.md"
+
+# The name of a directory (relative to the top level of the repository)
+# containing the documentation source. If this is not set, then the scripts
+# will assume the top level of the repository is the top level of the
+# documentation.
+export SOURCE_SUBDIR="docs"
