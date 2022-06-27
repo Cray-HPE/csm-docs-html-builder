@@ -42,7 +42,7 @@ export DOCS_REPO_LOCAL_DIR="docs-sat"
 export DOC_TITLE="SAT Documentation"
 
 # The branch to which the HTML docs should be pushed.
-export DOCS_HTML_RELEASE_BRANCH="release/docs-html"
+export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
 
 # The path to the docker-compose YAML file that should be used for Hugo prep
 # (relative to the compose/ directory).
