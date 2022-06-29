@@ -43,7 +43,7 @@ jobs:
       - name: Setup SSH keys
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_CSM }}
+          ssh-private-key: ${{ secrets.DEPLOYKEY_WRITE_DOCS_SAT }}
 
       - name: Check out csm-docs-html-builder repository
         uses: actions/checkout@v2
