@@ -61,10 +61,17 @@ function build () {
   cd ${OLDPWD}
 
   echo "Preparing markdown for Hugo..."
+  set +e
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" up \
-    --force-recreate --no-color --remove-orphans | \
+    --force-recreate --no-color --remove-orphans --abort-on-container-exit | \
   tee -a "$LOG_FILE"
+  exit_code=${PIPESTATUS[0]}
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" down
+  set -e
+  if [ $exit_code -ne 0 ]; then
+    echo "Exiting due to Hugo preparation errors above ..."
+    exit $exit_code
+  fi
 
   echo "Creating root _index.md"
   gen_hugo_yaml "$DOC_TITLE" > content/_index.md
