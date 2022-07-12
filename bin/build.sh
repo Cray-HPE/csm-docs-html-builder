@@ -63,7 +63,7 @@ function build () {
   echo "Preparing markdown for Hugo..."
   set +e
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" up \
-    --force-recreate --no-color --remove-orphans --abort-on-container-exit | \
+    --force-recreate --no-color --remove-orphans | \
   tee -a "$LOG_FILE"
   exit_code=${PIPESTATUS[0]}
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" down
