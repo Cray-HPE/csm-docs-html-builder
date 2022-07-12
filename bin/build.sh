@@ -64,8 +64,13 @@ function build () {
   set +e
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" up \
     --force-recreate --no-color --remove-orphans | \
-  tee -a "$LOG_FILE"
+    tee "$LOG_FILE"
   exit_code=${PIPESTATUS[0]}
+  if [ $exit_code -eq 0 ]; then
+      if grep -E 'hugo_prep_[0-9]+ exited with code' "$LOG_FILE" | grep -v 'exited with code 0'; then 
+          exit_code=1
+      fi
+  fi
   docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" down
   set -e
   if [ $exit_code -ne 0 ]; then
@@ -82,7 +87,7 @@ function build () {
   set +e
   docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" up \
     --force-recreate --no-color --remove-orphans --abort-on-container-exit --exit-code-from hugo_build | \
-  tee -a "$LOG_FILE"
+    tee "$LOG_FILE"
   exit_code=${PIPESTATUS[0]}
   docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" down
   set -e
