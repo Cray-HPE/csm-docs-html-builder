@@ -40,3 +40,8 @@ disableLandingPageButton = true
     languageName = "1.2"
     weight = 40
     landingPageURL = "/docs-csm/en-12"
+  [languages.en-13]
+    contentDir = "content/1.3"
+    languageName = "1.3"
+    weight = 40
+    landingPageURL = "/docs-csm/en-13"
