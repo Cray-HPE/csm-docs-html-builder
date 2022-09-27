@@ -55,5 +55,6 @@ cp -r public/* "$DOCS_LOCAL_PUSH_DIR"
 cd "$DOCS_LOCAL_PUSH_DIR"
 git add .
 pwd
-git commit -m "Generated HTML from $DOCS_REPO_LOCAL_DIR"
-git push origin "$DOCS_HTML_RELEASE_BRANCH"
+git commit --amend --no-edit
+# git commit -m "Generated HTML from $DOCS_REPO_LOCAL_DIR"
+git push --force origin "$DOCS_HTML_RELEASE_BRANCH"
