@@ -2,7 +2,7 @@ title = "System Admin Toolkit (SAT)"
 theme = "hugo-theme-learn"
 baseURL = "/docs-sat/"
 languageCode = "en-US"
-defaultContentLanguage = "en-24"
+defaultContentLanguage = "en-25"
 defaultContentLanguageInSubdir = true
 showVisitedLinks = true
 refLinksErrorLevel = "WARNING"
@@ -17,6 +17,11 @@ disableNextPrev = true
 disableLandingPageButton = true
 
 [languages]
+  [languages.en-25]
+    contentDir = "content/2.5"
+    languageName = "2.5"
+    weight = 40
+    landingPageURL = "/docs-sat/en-25"
   [languages.en-24]
     contentDir = "content/2.4"
     languageName = "2.4"

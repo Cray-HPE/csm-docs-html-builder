@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -72,6 +72,20 @@ services:
     image: ubuntu
     environment:
       DOCS_BRANCH: 2.4
+      PRODUCT_NAME: sat
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-sat/
+      - --destination
+      - /src/content
+  hugo_prep_25:
+    container_name: hugo_prep_25
+    image: ubuntu
+    environment:
+      DOCS_BRANCH: 2.5
       PRODUCT_NAME: sat
     volumes:
       - ${PWD}:/src
