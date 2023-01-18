@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -79,6 +79,17 @@ services:
     networks:
       sat_documentation:
         ipv4_address: 10.253.252.6
+  linkcheck_en_25:
+    build: ${PWD}/bin/compose/build/linkchecker
+    container_name: sat_docs_linkcheck_25
+    depends_on:
+      - serve_static
+    image: filiph/linkcheck
+    command:
+      - http://10.253.252.2/docs-sat/en-25
+    networks:
+      sat_documentation:
+        ipv4_address: 10.253.252.7
 
 networks:
   sat_documentation:
