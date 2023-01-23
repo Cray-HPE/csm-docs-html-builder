@@ -89,3 +89,16 @@ services:
       - /src/docs-csm/
       - --destination
       - /src/content/
+  hugo_prep_14:
+    container_name: hugo_prep_14
+    image: ubuntu
+    environment:
+      CSM_BRANCH: 1.4
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-csm/
+      - --destination
+      - /src/content/
