@@ -124,7 +124,7 @@ function process_file() {
 
 function get_old_title() {
     # Look for a header1 tag in the first 10 lines of the file.
-    cat $1 | head -10 | grep -E "^#+\s" | head -1
+    cat $1 | head -10 | grep -E "^(#+\s|<h1)" | head -1 | sed -e 's|<h1[^>]*>||' | sed -e 's|</h1>||'
 }
 
 function populate_missing_index_files() {
