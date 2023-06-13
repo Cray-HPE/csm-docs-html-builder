@@ -26,7 +26,7 @@
 
 # A list of releases that should be built. Each entry should be X.Y where the
 # branch release/X.Y exists in the docs repo.
-export BRANCHES=("2.5" "2.4" "2.3" "2.2" "2.1")
+export BRANCHES=("2.6" "2.5" "2.4" "2.3" "2.2" "2.1")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
@@ -61,7 +61,7 @@ export HUGO_TEST_COMPOSE_FILE="sat/test.sat.yml"
 export HUGO_DEV_SERVER_COMPOSE_FILE="dev_serve.yml"
 
 # The names of the "linkcheck" services in $HUGO_TEST_COMPOSE_FILE
-export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_en_23" "linkcheck_en_24" "linkcheck_en_25")
+export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_en_23" "linkcheck_en_24" "linkcheck_en_25" "linkcheck_en_26")
 
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh

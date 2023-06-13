@@ -95,3 +95,17 @@ services:
       - /src/docs-sat/
       - --destination
       - /src/content
+  hugo_prep_26:
+    container_name: hugo_prep_26
+    image: ubuntu
+    environment:
+      DOCS_BRANCH: 2.6
+      PRODUCT_NAME: sat
+    volumes:
+      - ${PWD}:/src
+    entrypoint:
+      - /src/bin/convert-docs-to-hugo.sh
+      - --source
+      - /src/docs-sat/
+      - --destination
+      - /src/content
