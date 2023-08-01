@@ -35,15 +35,11 @@ source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
 
 function clean() {
   function clean_dir() {
-    [[ -d ./$1 ]] && sudo rm -rf ./$1
+    [[ -d ./$1 ]] && rm -rf ./$1
     mkdir -p ./$1
   }
   clean_dir content
   clean_dir public
-  # DOCS_REPO_LOCAL_DIR should be set in $PRODUCT_NAME.sh, but give
-  # it a default so that it doesn't call `sudo rm -rf .` when the
-  # variable is unset.
-  clean_dir "${DOCS_REPO_LOCAL_DIR:-docs-csm}"
   [[ -f $LOG_FILE ]] && rm "$LOG_FILE"
   touch "$LOG_FILE"
   docker network prune -f
@@ -56,9 +52,14 @@ function build () {
   mkdir -p "$DOCS_REPO_LOCAL_DIR"
   cd "$DOCS_REPO_LOCAL_DIR"
   for branch in "${BRANCHES[@]}"; do
-    git clone --depth 1 -b "release/${branch}" "$DOCS_REPO_REMOTE_URL" "./${branch}"
+      if [ -d "./${branch}" ]; then
+          git -C "./${branch}" checkout -B "release/${branch}"
+          git -C "./${branch}" pull origin "release/${branch}"
+      else
+          git clone --depth 1 -b "release/${branch}" "$DOCS_REPO_REMOTE_URL" "./${branch}"
+      fi
   done
-  cd ${OLDPWD}
+  cd "${OLDPWD}"
 
   echo "Preparing markdown for Hugo..."
   set +e
