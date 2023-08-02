@@ -1,0 +1,28 @@
+title: Cray System Management (CSM)
+theme: hugo-theme-learn
+baseURL: /docs-csm/
+languageCode: en-US
+defaultContentLanguage: en-${LAST_SUFFIX}
+defaultContentLanguageInSubdir: true
+showVisitedLinks: true
+refLinksErrorLevel: WARNING
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+params:
+  shortTitle: Cray System Management
+  themeVariant: blue
+  disableNextPrev: true
+  disableLandingPageButton: true
+languages:
+  en-${SUFFIX}:
+    contentDir: content/${BRANCH}
+    languageName: '${BRANCH}'
+    weight: 10
+    landingPageURL: /docs-csm/en-${SUFFIX}
+markup:
+  goldmark:
+    renderer:
+      unsafe: true

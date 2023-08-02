@@ -22,28 +22,30 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-set -ex
+set -e
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd $THIS_DIR/..
 LAST_DIR=${OLDPWD}
+TMP_DIR="$(mktemp -d)"
+export TMP_DIR
+trap "docker-compose -f ${TMP_DIR}/hugo_test.yaml down; rm -Rf ${TMP_DIR}" EXIT
 
 # Default product is CSM to maintain backward compatibility
 PRODUCT_NAME=${1:-csm}
 # shellcheck source=conf/csm.sh
 source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
+source $THIS_DIR/lib/functions.sh
 
 function test_links() {
   echo "Test links in HTML pages..."
+  generate_yaml "${THIS_DIR}/compose/test.yml" "${TMP_DIR}/hugo_test.yaml"
 
   # Standup the nginx server as a background daemon first
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up --force-recreate --no-color --remove-orphans -d serve_static
+  docker-compose -f "${TMP_DIR}/hugo_test.yaml" up --force-recreate --remove-orphans -d serve_static
 
+  SERVICE_NAMES=( $(for BRANCH in "${BRANCHES[@]}"; do echo linkcheck_en_${BRANCH//./}; done) )
   # Crawl the links for each version
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up --no-color --remove-orphans \
-  "${LINKCHECK_SERVICE_NAMES[@]}" | tee -a csm_docs_build.log
-
-  # Tear it all down
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" down
+  docker-compose -f "${TMP_DIR}/hugo_test.yaml" up --force-recreate --remove-orphans "${SERVICE_NAMES[@]}"
 }
 test_links
 

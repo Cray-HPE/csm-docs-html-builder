@@ -32,9 +32,6 @@ export BRANCHES=("2.6" "2.5" "2.4" "2.3" "2.2" "2.1")
 # 'git clone $DOCS_REPO_REMOTE_URL'.
 export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-sat.git"
 
-# The name of the log file.
-export LOG_FILE="sat_docs_build.log"
-
 # The local directory to which the documentation repository should be cloned.
 export DOCS_REPO_LOCAL_DIR="docs-sat"
 
@@ -44,24 +41,9 @@ export DOC_TITLE="SAT Documentation"
 # The branch to which the HTML docs should be pushed.
 export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
 
-# The path to the docker-compose YAML file that should be used for Hugo prep
-# (relative to the compose/ directory).
-export HUGO_PREP_COMPOSE_FILE="sat/hugo_prep.sat.yml"
-
-# The path to the docker-compose YAML File that should be used for Hugo build
-# (relative to the compose/ directory).
-export HUGO_BUILD_COMPOSE_FILE="sat/hugo_build.sat.yml"
-
-# The path to the docker-compose YAML file that should be used for Hugo tests.
-# (relative to the compose/ directory).
-export HUGO_TEST_COMPOSE_FILE="sat/test.sat.yml"
-
-# The path to the docker-compose YAML file that should be used for the Hugo
-# local development server (relative to the compose/ directory).
-export HUGO_DEV_SERVER_COMPOSE_FILE="dev_serve.yml"
-
-# The names of the "linkcheck" services in $HUGO_TEST_COMPOSE_FILE
-export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_en_23" "linkcheck_en_24" "linkcheck_en_25" "linkcheck_en_26")
+# Hugo config file template, relative to repo root. Resulting file will be generated from this
+# template by replacing ${BRANCH} for each branch name and merging results into single file.
+export HUGO_CONFIG_FILE_TEMPLATE=config.sat.yaml
 
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh

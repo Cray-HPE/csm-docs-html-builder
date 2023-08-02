@@ -31,9 +31,6 @@ export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4")
 # 'git clone $DOCS_REPO_REMOTE_URL'.
 export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-csm.git"
 
-# The name of the log file.
-export LOG_FILE="csm_docs_build.log"
-
 # The local directory to which the documentation repository should be cloned.
 export DOCS_REPO_LOCAL_DIR="docs-csm"
 
@@ -43,24 +40,9 @@ export DOC_TITLE="CSM Documentation"
 # The branch to which the HTML docs should be pushed.
 export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
 
-# The path to the docker-compose YAML file that should be used for Hugo prep
-# (relative to the compose/ directory).
-export HUGO_PREP_COMPOSE_FILE="hugo_prep.yml"
-
-# The path to the docker-compose YAML File that should be used for Hugo build
-# (relative to the compose/ directory).
-export HUGO_BUILD_COMPOSE_FILE="hugo_build.yml"
-
-# The path to the docker-compose YAML file that should be used for Hugo tests.
-# (relative to the compose/ directory).
-export HUGO_TEST_COMPOSE_FILE="test.yml"
-
-# The path to the docker-compose YAML file that should be used for the Hugo
-# local development server (relative to the compose/ directory).
-export HUGO_DEV_SERVER_COMPOSE_FILE="dev_serve.yml"
-
-# The names of the "linkcheck" services in $HUGO_TEST_COMPOSE_FILE
-export LINKCHECK_SERVICE_NAMES=("linkcheck_en_09" "linkcheck_en_10" "linkcheck_en_11" "linkcheck_en_12" "linkcheck_en_13" "linkcheck_en_14")
+# Hugo config file template, relative to repo root. Resulting file will be generated from this
+# template by replacing ${BRANCH} for each branch name and merging results into single file.
+export HUGO_CONFIG_FILE_TEMPLATE=config.yaml
 
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh
