@@ -25,43 +25,27 @@
 #
 
 # A list of releases that should be built. Each entry should be X.Y where the
-# branch release/X.Y exists in the docs repo.
-export BRANCHES=("2.6" "2.5" "2.4" "2.3" "2.2" "2.1")
+# branch release/X.Y exists in the docs repo. Last release becomes default.
+export BRANCHES=("2.1" "2.2" "2.3" "2.4" "2.5" "2.6")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
 export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-sat.git"
 
-# The name of the log file.
-export LOG_FILE="sat_docs_build.log"
+# The local directory and generated HTML root context
+export DOCS_DIR="docs-sat"
 
-# The local directory to which the documentation repository should be cloned.
-export DOCS_REPO_LOCAL_DIR="docs-sat"
+# Parameter for Hugo config file
+export TITLE="System Admin Toolkit (SAT)"
+
+# Parameter for Hugo config file
+export SHORT_TITLE="System Admin Toolkit"
 
 # The title that should appear at the top of the HTML docs.
 export DOC_TITLE="SAT Documentation"
 
 # The branch to which the HTML docs should be pushed.
 export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
-
-# The path to the docker-compose YAML file that should be used for Hugo prep
-# (relative to the compose/ directory).
-export HUGO_PREP_COMPOSE_FILE="sat/hugo_prep.sat.yml"
-
-# The path to the docker-compose YAML File that should be used for Hugo build
-# (relative to the compose/ directory).
-export HUGO_BUILD_COMPOSE_FILE="sat/hugo_build.sat.yml"
-
-# The path to the docker-compose YAML file that should be used for Hugo tests.
-# (relative to the compose/ directory).
-export HUGO_TEST_COMPOSE_FILE="sat/test.sat.yml"
-
-# The path to the docker-compose YAML file that should be used for the Hugo
-# local development server (relative to the compose/ directory).
-export HUGO_DEV_SERVER_COMPOSE_FILE="dev_serve.yml"
-
-# The names of the "linkcheck" services in $HUGO_TEST_COMPOSE_FILE
-export LINKCHECK_SERVICE_NAMES=("linkcheck_en_21" "linkcheck_en_22" "linkcheck_en_23" "linkcheck_en_24" "linkcheck_en_25" "linkcheck_en_26")
 
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh

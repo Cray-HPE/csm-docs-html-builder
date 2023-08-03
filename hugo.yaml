@@ -1,0 +1,24 @@
+title: ${TITLE}
+theme: hugo-theme-learn
+baseURL: /${DOCS_DIR}/
+languageCode: en-US
+defaultContentLanguage: en-${LAST_SUFFIX}
+defaultContentLanguageInSubdir: true
+showVisitedLinks: true
+refLinksErrorLevel: WARNING
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+params:
+  shortTitle: ${SHORT_TITLE}
+  themeVariant: blue
+  disableNextPrev: true
+  disableLandingPageButton: true
+languages:
+  en-${SUFFIX}:
+    contentDir: content/${BRANCH}
+    languageName: '${BRANCH}'
+    weight: ${WEIGHT}
+    landingPageURL: /${DOCS_DIR}/en-${SUFFIX}

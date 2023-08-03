@@ -35,12 +35,12 @@ PRODUCT_NAME=${1:-csm}
 source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
 
 # This directory may already exist as it is used by build.sh
-mkdir -p "$DOCS_REPO_LOCAL_DIR"
+mkdir -p "$DOCS_DIR"
 # Create an inner directory of the same name (e.g. docs-csm/docs-csmXXX/) to
 # commit changes, where XXX are 3 random characters. Use random characters so
 # that this script can be run multiple times without needing to remove the
 # directory each time.
-DOCS_LOCAL_PUSH_DIR=$(mktemp -d "${DOCS_REPO_LOCAL_DIR}/${DOCS_REPO_LOCAL_DIR}XXX")
+DOCS_LOCAL_PUSH_DIR=$(mktemp -d "${DOCS_DIR}/${DOCS_DIR}XXX")
 # Clone with --no-checkout so that no extraneous files/directories (e.g.
 # .version, .gitignore, .github) are checked out.
 git clone \
@@ -56,5 +56,5 @@ cd "$DOCS_LOCAL_PUSH_DIR"
 git add .
 pwd
 git commit --amend --no-edit
-# git commit -m "Generated HTML from $DOCS_REPO_LOCAL_DIR"
+# git commit -m "Generated HTML from $DOCS_DIR"
 git push --force origin "$DOCS_HTML_RELEASE_BRANCH"

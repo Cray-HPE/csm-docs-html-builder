@@ -26,9 +26,11 @@ version: '3'
 services:
   hugo_build:
     container_name: hugo_build
+    command: --config /config/hugo.yaml
     # image: peaceiris/hugo:v0.x.x
     # image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
     image: peaceiris/hugo:v0.84.4-full  # Hugo Modules and Node.js
     volumes:
       - ${PWD}:/src
+      - ${TMP_DIR}/hugo.yaml:/config/hugo.yaml
     working_dir: /src

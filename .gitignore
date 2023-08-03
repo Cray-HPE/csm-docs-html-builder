@@ -1,7 +1,4 @@
 content/
-docs-csm/
-docs-sat/
+docs-*/
 public/
 .DS_Store
-csm_docs_build.log
-sat_docs_build.log

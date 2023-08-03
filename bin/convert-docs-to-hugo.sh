@@ -41,8 +41,7 @@ the path to the docs-csm repo and --destination is the path to the hugo content 
 folder will be deleted and recreated.
 
 This script also looks for an environment variable named DOCS_BRANCH in order to place content in the
-appropriate subdirectory which maps to a Hugo "language". For backwards compatibility, the variable
-CSM_BRANCH can also be used.
+appropriate subdirectory which maps to a Hugo "language". 
 
 To build products other than CSM, set the PRODUCT_NAME environment variable.
 
@@ -73,7 +72,7 @@ function validate_args() {
     fi
 
     if [[ -z $DOCS_BRANCH ]]; then
-        echo "Expected a DOCS_BRANCH or CSM_BRANCH environment variable."
+        echo "Expected a DOCS_BRANCH environment variable."
         help
     fi
 }
@@ -156,7 +155,6 @@ function delete_dir_contents() {
     mkdir -p $1
 }
 
-DOCS_BRANCH=${DOCS_BRANCH:-$CSM_BRANCH}
 validate_args $1 $2 $3 $4
 SOURCE_DIR=$(cd $2 && pwd)
 SOURCE_DIR=${SOURCE_DIR}/${DOCS_BRANCH}

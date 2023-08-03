@@ -24,75 +24,19 @@
 version: '3'
 
 services:
-
   serve_static:
     container_name: nginx
     image: nginx
     volumes:
-      - ${PWD}/public:/usr/share/nginx/html/docs-csm:ro
+      - ${PWD}/public:/usr/share/nginx/html/${DOCS_DIR}:ro
     ports:
       - "80:80"
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.2
-  linkcheck_en_10:
+
+  linkcheck_en_${SUFFIX}:
     build: ${PWD}/bin/compose/build/linkchecker
-    container_name: csm_docs_linkcheck_10
+    container_name: linkcheck_${SUFFIX}
     depends_on:
       - serve_static
     image: filiph/linkcheck
     command:
-      - http://10.253.253.2/docs-csm/en-10
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.3
-  linkcheck_en_09:
-    build: ${PWD}/bin/compose/build/linkchecker
-    container_name: csm_docs_linkcheck_09
-    depends_on:
-      - serve_static
-    image: filiph/linkcheck
-    command:
-      - http://10.253.253.2/docs-csm/en-09
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.4
-  linkcheck_en_11:
-    build: ${PWD}/bin/compose/build/linkchecker
-    container_name: csm_docs_linkcheck_11
-    depends_on:
-      - serve_static
-    image: filiph/linkcheck
-    command:
-      - http://10.253.253.2/docs-csm/en-11
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.5
-  linkcheck_en_12:
-    build: ${PWD}/bin/compose/build/linkchecker
-    container_name: csm_docs_linkcheck_12
-    depends_on:
-      - serve_static
-    image: filiph/linkcheck
-    command:
-      - http://10.253.253.2/docs-csm/en-12
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.6
-  linkcheck_en_13:
-    build: ${PWD}/bin/compose/build/linkchecker
-    container_name: csm_docs_linkcheck_13
-    depends_on:
-      - serve_static
-    image: filiph/linkcheck
-    command:
-      - http://10.253.253.2/docs-csm/en-13
-    networks:
-      csm_documentation:
-        ipv4_address: 10.253.253.7
-networks:
-  csm_documentation:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.253.253.0/24
+      - http://serve_static/${DOCS_DIR}/en-${SUFFIX}

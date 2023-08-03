@@ -22,11 +22,15 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-set -ex
+set -e
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-source $THIS_DIR/lib/*
+source $THIS_DIR/lib/content_prep
+source $THIS_DIR/lib/functions.sh
 cd $THIS_DIR/..
 LAST_DIR=${OLDPWD}
+TMP_DIR="$(mktemp -d)"
+export TMP_DIR
+trap "docker-compose -f ${TMP_DIR}/hugo_prep.yml down; rm -Rf ${TMP_DIR}; docker-compose -f ${THIS_DIR}/compose/hugo_build.yml down" EXIT
 
 # Default product is CSM to maintain backward compatibility
 PRODUCT_NAME=${1:-csm}
@@ -40,17 +44,15 @@ function clean() {
   }
   clean_dir content
   clean_dir public
-  [[ -f $LOG_FILE ]] && rm "$LOG_FILE"
-  touch "$LOG_FILE"
   docker network prune -f
 }
 clean
 
 function build () {
-  echo "Cloning into ${DOCS_REPO_LOCAL_DIR}..."
+  echo "Cloning into ${DOCS_DIR}..."
 
-  mkdir -p "$DOCS_REPO_LOCAL_DIR"
-  cd "$DOCS_REPO_LOCAL_DIR"
+  mkdir -p "$DOCS_DIR"
+  cd "$DOCS_DIR"
   for branch in "${BRANCHES[@]}"; do
       if [ -d "./${branch}" ]; then
           git -C "./${branch}" checkout -B "release/${branch}"
@@ -62,17 +64,15 @@ function build () {
   cd "${OLDPWD}"
 
   echo "Preparing markdown for Hugo..."
+  generate_yaml "${THIS_DIR}/compose/hugo_prep.yml" "${TMP_DIR}/hugo_prep.yml"
   set +e
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" up \
-    --force-recreate --no-color --remove-orphans | \
-    tee "$LOG_FILE"
+  docker-compose -f "${TMP_DIR}/hugo_prep.yml" up --force-recreate --no-color --remove-orphans | tee "${TMP_DIR}/hugo_prep.log"
   exit_code=${PIPESTATUS[0]}
   if [ $exit_code -eq 0 ]; then
-      if grep -E 'hugo_prep_[0-9]+ exited with code' "$LOG_FILE" | grep -v 'exited with code 0'; then 
+      if grep -E 'hugo_prep_[0-9]+ exited with code' "${TMP_DIR}/hugo_prep.log" | grep -v 'exited with code 0'; then 
           exit_code=1
       fi
   fi
-  docker-compose -f "${THIS_DIR}/compose/${HUGO_PREP_COMPOSE_FILE}" down
   set -e
   if [ $exit_code -ne 0 ]; then
     echo "Exiting due to Hugo preparation errors above ..."
@@ -85,14 +85,9 @@ function build () {
   gen_index_content content >> content/_index.md
 
   echo "Build html pages with Hugo..."
-  set +e
-  docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" up \
-    --force-recreate --no-color --remove-orphans --abort-on-container-exit --exit-code-from hugo_build | \
-    tee "$LOG_FILE"
-  exit_code=${PIPESTATUS[0]}
-  docker-compose -f "$THIS_DIR/compose/${HUGO_BUILD_COMPOSE_FILE}" down
-  set -e
-  return ${exit_code}
+  generate_yaml "${THIS_DIR}/../hugo.yaml" "${TMP_DIR}/hugo.yaml"
+  docker-compose -f "$THIS_DIR/compose/hugo_build.yml" up \
+    --force-recreate --remove-orphans --abort-on-container-exit --exit-code-from hugo_build
 }
 build
 
