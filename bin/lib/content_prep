@@ -1,11 +1,10 @@
 #!/bin/usr/env bash
 
 function make_new_title() {
-    # Remove "CSM", extra spaces, number signs, html, and colons.
+    # Remove extra spaces, number signs, html, and colons.
     # Change underscores to spaces. Capitalize acronyms and every word.
     echo "${1}" | \
     sed -r 's`^#+ ``' | \
-    sed -r 's`CSM``' | sed 's`csm``g' | sed 's`()``g' | \
     sed -r 's`^ +``' | \
     sed 's|`||g' | \
     sed 's`:``g' | \
@@ -13,6 +12,7 @@ function make_new_title() {
     sed -r 's`<.*>.*<.*>``' | \
     sed 's`\\(`(`g' | sed 's`\\)`)`g' | \
     awk '{for (i=1; i<=NF; ++i) { $i=toupper(substr($i,1,1)) tolower(substr($i,2)); } print }' | \
+    sed -r 's`[C,c]sm`CSM`' | \
     sed -r 's`[S,s]ls`SLS`' | \
     sed -r 's`[T,s]ls`TLS`' | \
     sed -r 's`[P,p]ki`PKI`' | \
@@ -90,14 +90,24 @@ Topics:
 YAML
 }
 
+function get_old_title() {
+    # Look for a header1 tag in the first 10 lines of the file.
+    cat $1 | head -10 | grep -E "^(#+\s|<h1)" | head -1 | sed -e 's|<h1[^>]*>||' | sed -e 's|</h1>||'
+}
+
 function gen_index_content() {
     # e.g. 1. [Prepare Configuration Payload](prepare_configuration_payload)
     for f in $(ls $1/)
     do
         if [[ $f != "_index.md" ]] && [[ "${f: -3}" == ".md" ]] || \
         [[ -d ${1}/$f ]] && [[ ! $(echo $f | grep -E "(^img$|^scripts$)") ]]; then
-            f=$(echo $f | sed 's`.md``' | awk '{print tolower($0)}')
-            echo "1. [$(make_new_title ${f})](${f})"
+            t=""
+            # Try to get title from md file header first
+            test -d "${1}/${f}" || t=$(get_old_title "${1}/${f}")
+            # If unable to identify title from md file header, fall down to file/directory name
+            test -z "${t}" && t=$(echo $f | sed 's`.md``' | awk '{print tolower($0)}')
+            t=$(make_new_title "${t}")
+            echo "1. [${t}](${f})"
         fi
     done
 }

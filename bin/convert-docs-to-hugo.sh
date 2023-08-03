@@ -121,11 +121,6 @@ function process_file() {
     # echo "done."
 }
 
-function get_old_title() {
-    # Look for a header1 tag in the first 10 lines of the file.
-    cat $1 | head -10 | grep -E "^(#+\s|<h1)" | head -1 | sed -e 's|<h1[^>]*>||' | sed -e 's|</h1>||'
-}
-
 function populate_missing_index_files() {
     echo "####### Populating Missing Index Files #########"
     for dir in $(find $DESTINATION_DIR -type d)
@@ -136,18 +131,13 @@ function populate_missing_index_files() {
             [[ -z $(echo $relative_path | grep "scripts") ]]; then
             new_title=$(make_new_title "$(basename $dir)")
             echo "Title: ${new_title} - Creating missing index file at $dir/_index.md"
-            gen_hugo_yaml "$new_title" > $dir/_index.md
-            gen_index_header "$new_title" >> $dir/_index.md
-            gen_index_content $dir $relative_path >> $dir/_index.md
+            gen_hugo_yaml "$new_title" > "$dir/_index.md.tmp"
+            gen_index_header "$new_title" >> "$dir/_index.md.tmp"
+            gen_index_content "$dir" "$relative_path" >> "$dir/_index.md.tmp"
+            transform_links "$dir/_index.md.tmp" "$INDEX_FILE_NAME" > "$dir/_index.md"
+            rm "$dir/_index.md.tmp"
         fi
     done
-}
-
-function apply_specific_csm_fixes() {
-    set +e
-    [[ $DOCS_BRANCH != "0.9" ]] && mv $DESTINATION_DIR/upgrade/1.0/README.md $DESTINATION_DIR/upgrade/1.0/_index.md
-    mv $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/README.md $DESTINATION_DIR/upgrade/0.9/csm-0.9.4/_index.md
-    set -e
 }
 
 function delete_dir_contents() {
@@ -168,6 +158,3 @@ delete_dir_contents $DESTINATION_DIR
 
 crawl_directory $SOURCE_DIR
 populate_missing_index_files
-if [[ "$PRODUCT_NAME" == "csm" ]]; then
-    apply_specific_csm_fixes
-fi
