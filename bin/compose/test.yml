@@ -24,17 +24,14 @@
 version: '3'
 
 services:
-
   serve_static:
     container_name: nginx
     image: nginx
     volumes:
-      - ${PWD}/public:/usr/share/nginx/html/${DOCS_REPO_LOCAL_DIR}:ro
+      - ${PWD}/public:/usr/share/nginx/html/${DOCS_DIR}:ro
     ports:
       - "80:80"
-    networks:
-      doc_network:
-        ipv4_address: 10.253.253.2
+
   linkcheck_en_${SUFFIX}:
     build: ${PWD}/bin/compose/build/linkchecker
     container_name: linkcheck_${SUFFIX}
@@ -42,12 +39,4 @@ services:
       - serve_static
     image: filiph/linkcheck
     command:
-      - http://10.253.253.2/${DOCS_REPO_LOCAL_DIR}/en-${SUFFIX}
-    networks:
-      doc_network:
-networks:
-  doc_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.253.253.0/24
+      - http://serve_static/${DOCS_DIR}/en-${SUFFIX}

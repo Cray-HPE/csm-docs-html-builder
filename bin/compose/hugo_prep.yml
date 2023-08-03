@@ -28,13 +28,13 @@ services:
     container_name: hugo_prep_${SUFFIX}
     image: ubuntu
     environment:
-      CSM_BRANCH: "${BRANCH}"
+      DOCS_BRANCH: "${BRANCH}"
       PRODUCT_NAME: "${PRODUCT_NAME}"
     volumes:
       - ${PWD}:/src
     entrypoint:
       - /src/bin/convert-docs-to-hugo.sh
       - --source
-      - /src/${DOCS_REPO_LOCAL_DIR}/
+      - /src/${DOCS_DIR}/
       - --destination
       - /src/content/

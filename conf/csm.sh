@@ -22,27 +22,30 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 # Contains configuration variables for building csm docs.
+#
 
 # A list of releases that should be built. Each entry should be X.Y where the
-# branch release/X.Y exists in the docs repo.
+# branch release/X.Y exists in the docs repo. Last release becomes default.
 export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
 export DOCS_REPO_REMOTE_URL="git@github.com:Cray-HPE/docs-csm.git"
 
-# The local directory to which the documentation repository should be cloned.
-export DOCS_REPO_LOCAL_DIR="docs-csm"
+# The local directory and generated HTML root context
+export DOCS_DIR="docs-csm"
+
+# Parameter for Hugo config file
+export TITLE="Cray System Management (CSM)"
+
+# Parameter for Hugo config file
+export SHORT_TITLE="Cray System Management"
 
 # The title that should appear at the top of the HTML docs.
 export DOC_TITLE="CSM Documentation"
 
 # The branch to which the HTML docs should be pushed.
 export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
-
-# Hugo config file template, relative to repo root. Resulting file will be generated from this
-# template by replacing ${BRANCH} for each branch name and merging results into single file.
-export HUGO_CONFIG_FILE_TEMPLATE=config.yaml
 
 # The name of the "index" files that should be converted to _index.md files in
 # convert-docs-to-hugo.sh

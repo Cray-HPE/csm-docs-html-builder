@@ -24,14 +24,18 @@
 #
 set -ex
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-source $THIS_DIR/lib/*
+source $THIS_DIR/lib/functions.sh
 cd $THIS_DIR/..
+TMP_DIR="$(mktemp -d)"
+export TMP_DIR
+trap "docker-compose -f ${TMP_DIR}/hugo_test.yaml down; rm -Rf ${TMP_DIR}" EXIT
 
 # Default product is CSM to maintain backward compatibility
 PRODUCT_NAME=${1:-csm}
 # shellcheck source=conf/csm.sh
 source "${THIS_DIR}/../conf/${PRODUCT_NAME}.sh"
 
-docker-compose -f "${THIS_DIR}/compose/${HUGO_TEST_COMPOSE_FILE}" up \
+generate_yaml "${THIS_DIR}/compose/test.yml" "${TMP_DIR}/hugo_test.yaml"
+docker-compose -f "${TMP_DIR}/hugo_test.yaml" up \
     --force-recreate --no-color --remove-orphans serve_static
 

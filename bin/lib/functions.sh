@@ -1,6 +1,6 @@
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,7 @@ function generate_yaml() {
     for INDEX in "${!BRANCHES[@]}"; do
         BRANCH="${BRANCHES[$INDEX]}"
         SUFFIX="${BRANCH//./}"
-        WEIGHT="$(($INDEX * 10))"
+        WEIGHT="$(((${#BRANCHES[@]} - $INDEX) * 10))"
         cat "${INFILE}" \
             | sed -e "s/^#.*//" \
             | sed -e "s/\${LAST_SUFFIX}/${LAST_SUFFIX}/" \
@@ -46,6 +46,9 @@ function generate_yaml() {
             | sed -e "s/\${BRANCH}/${BRANCH}/" \
             | sed -e "s/\${WEIGHT}/${WEIGHT}/" \
             | sed -e "s/\${PRODUCT_NAME}/${PRODUCT_NAME}/" \
+            | sed -e "s/\${TITLE}/${TITLE}/" \
+            | sed -e "s/\${SHORT_TITLE}/${SHORT_TITLE}/" \
+            | sed -e "s/\${DOCS_DIR}/${DOCS_DIR}/" \
             | yq ea -i '. as $item ireduce ({}; . * $item )' "${OUTFILE}" -
     done
     echo "Generated YAML file ${OUTFILE}:"

@@ -49,10 +49,10 @@ function clean() {
 clean
 
 function build () {
-  echo "Cloning into ${DOCS_REPO_LOCAL_DIR}..."
+  echo "Cloning into ${DOCS_DIR}..."
 
-  mkdir -p "$DOCS_REPO_LOCAL_DIR"
-  cd "$DOCS_REPO_LOCAL_DIR"
+  mkdir -p "$DOCS_DIR"
+  cd "$DOCS_DIR"
   for branch in "${BRANCHES[@]}"; do
       if [ -d "./${branch}" ]; then
           git -C "./${branch}" checkout -B "release/${branch}"
@@ -85,7 +85,7 @@ function build () {
   gen_index_content content >> content/_index.md
 
   echo "Build html pages with Hugo..."
-  generate_yaml "${THIS_DIR}/../${HUGO_CONFIG_FILE_TEMPLATE}" "${TMP_DIR}/config.yaml"
+  generate_yaml "${THIS_DIR}/../hugo.yaml" "${TMP_DIR}/hugo.yaml"
   docker-compose -f "$THIS_DIR/compose/hugo_build.yml" up \
     --force-recreate --remove-orphans --abort-on-container-exit --exit-code-from hugo_build
 }

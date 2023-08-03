@@ -1,6 +1,6 @@
-title: Cray System Management (CSM)
+title: ${TITLE}
 theme: hugo-theme-learn
-baseURL: /docs-csm/
+baseURL: /${DOCS_DIR}/
 languageCode: en-US
 defaultContentLanguage: en-${LAST_SUFFIX}
 defaultContentLanguageInSubdir: true
@@ -12,7 +12,7 @@ outputs:
     - RSS
     - JSON
 params:
-  shortTitle: Cray System Management
+  shortTitle: ${SHORT_TITLE}
   themeVariant: blue
   disableNextPrev: true
   disableLandingPageButton: true
@@ -20,9 +20,5 @@ languages:
   en-${SUFFIX}:
     contentDir: content/${BRANCH}
     languageName: '${BRANCH}'
-    weight: 10
-    landingPageURL: /docs-csm/en-${SUFFIX}
-markup:
-  goldmark:
-    renderer:
-      unsafe: true
+    weight: ${WEIGHT}
+    landingPageURL: /${DOCS_DIR}/en-${SUFFIX}
