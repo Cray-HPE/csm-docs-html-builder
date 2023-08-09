@@ -26,7 +26,7 @@
 
 # A list of releases that should be built. Each entry should be X.Y where the
 # branch release/X.Y exists in the docs repo. Last release becomes default.
-export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4")
+export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4" "1.5")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
