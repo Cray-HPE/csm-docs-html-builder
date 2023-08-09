@@ -12,6 +12,7 @@ function make_new_title() {
     sed -r 's`<.*>.*<.*>``' | \
     sed 's`\\(`(`g' | sed 's`\\)`)`g' | \
     awk '{for (i=1; i<=NF; ++i) { $i=toupper(substr($i,1,1)) tolower(substr($i,2)); } print }' | \
+    sed -r 's`[R,r]est [A,a]pi`REST API`' | \
     sed -r 's`[C,c]sm`CSM`' | \
     sed -r 's`[S,s]ls`SLS`' | \
     sed -r 's`[T,s]ls`TLS`' | \
