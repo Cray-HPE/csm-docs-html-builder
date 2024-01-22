@@ -6,6 +6,10 @@ defaultContentLanguage: en-${LAST_SUFFIX}
 defaultContentLanguageInSubdir: true
 showVisitedLinks: true
 refLinksErrorLevel: WARNING
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
 outputs:
   home:
     - HTML
