@@ -25,4 +25,5 @@ languages:
     contentDir: content/${BRANCH}
     languageName: '${BRANCH}'
     weight: ${WEIGHT}
-    landingPageURL: /${DOCS_DIR}/en-${SUFFIX}
+    params:
+      landingPageURL: /${DOCS_DIR}/en-${SUFFIX}
