@@ -78,13 +78,15 @@ function validate_args() {
 }
 
 function crawl_directory() {
+    counter=0
     for file in $(ls "$1")
     do
         if [[ -f ${1}/${file} ]]; then
             if [[ "${file: -3}" == ".md" ]]; then
-                process_file $1/$file
+                counter=$((counter+1))
+                process_file $1/$file $counter
             else
-                echo "${1}/${file} is not a markdown file. Copying as is..."
+                echo "${1}/${file} is not a markdown file. Copying as is ..."
                 mid_path=$(echo -n "${1}/${file}" | sed "s|${SOURCE_DIR}||" | sed "s|${file}||")
                 cp ${1}/${file} $DESTINATION_DIR/$mid_path/
             fi
@@ -109,15 +111,17 @@ function process_file() {
     # fi
     filename=$(basename $1)
     mid_path=$(echo -n $1 | sed "s|${SOURCE_DIR}||" | sed "s|${filename}||")
-    [[ $filename == "${INDEX_FILE_NAME:-index.md}" ]] && filename="_index.md"
+    if [[ "${filename}" == "index.md" ]] || [[ "${filename}" == "README.md" ]]; then
+        filename="_index.md"
+    fi
     destination_file="${DESTINATION_DIR}/${mid_path}/${filename}"
     # echo -n "New Title: ${newtitle} - Transforming ${1} into ${destination_file}...  "
 
     # Add the yaml metadata to the top of the new file
-    gen_hugo_yaml "$newtitle" > $destination_file
+    gen_hugo_yaml "$newtitle" $2 > $destination_file
 
     # Add the file content.
-    transform_links $1 "$INDEX_FILE_NAME" >> $destination_file
+    transform_links $1 >> $destination_file
     # echo "done."
 }
 
@@ -126,15 +130,13 @@ function populate_missing_index_files() {
     for dir in $(find $DESTINATION_DIR -type d)
     do
         relative_path=$(echo -n $dir | sed "s|${DESTINATION_DIR}||")
-        if [[ ! -f $dir/_index.md ]] && \
-            [[ -z $(echo $relative_path | grep "img") ]] && \
-            [[ -z $(echo $relative_path | grep "scripts") ]]; then
+        if [[ ! -f $dir/_index.md ]] && [[ $(find "$dir" -name '*.md' | wc -l) -gt 0 ]]; then
             new_title=$(make_new_title "$(basename $dir)")
             echo "Title: ${new_title} - Creating missing index file at $dir/_index.md"
             gen_hugo_yaml "$new_title" > "$dir/_index.md.tmp"
             gen_index_header "$new_title" >> "$dir/_index.md.tmp"
             gen_index_content "$dir" "$relative_path" >> "$dir/_index.md.tmp"
-            transform_links "$dir/_index.md.tmp" "$INDEX_FILE_NAME" > "$dir/_index.md"
+            transform_links "$dir/_index.md.tmp" > "$dir/_index.md"
             rm "$dir/_index.md.tmp"
         fi
     done

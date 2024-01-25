@@ -47,10 +47,6 @@ export DOC_TITLE="SAT Documentation"
 # The branch to which the HTML docs should be pushed.
 export DOCS_HTML_RELEASE_BRANCH="publish/docs-html"
 
-# The name of the "index" files that should be converted to _index.md files in
-# convert-docs-to-hugo.sh
-export INDEX_FILE_NAME="README.md"
-
 # The name of a directory (relative to the top level of the repository)
 # containing the documentation source. If this is not set, then the scripts
 # will assume the top level of the repository is the top level of the
