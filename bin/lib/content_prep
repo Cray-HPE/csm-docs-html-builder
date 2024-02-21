@@ -71,7 +71,7 @@ function gen_index_content() {
             # Try to get title from md file header first
             test -d "${1}/${f}" || t=$(get_old_title "${1}/${f}")
             # If unable to identify title from md file header, fall down to file/directory name
-            test -z "${t}" && t=$(echo $f | sed 's`.md``' | awk '{print tolower($0)}')
+            test -z "${t}" && t=$(echo $f | sed 's`.md``')
             t=$(make_new_title "${t}")
             echo "1. [${t}](${f})"
         fi
