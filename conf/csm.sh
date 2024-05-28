@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2022-2024 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 
 # A list of releases that should be built. Each entry should be X.Y where the
 # branch release/X.Y exists in the docs repo. Last release becomes default.
-export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4" "1.5")
+export BRANCHES=("0.9" "1.0" "1.2" "1.3" "1.4" "1.5" "1.6")
 
 # The documentation repository remote URL. It must be possible to run
 # 'git clone $DOCS_REPO_REMOTE_URL'.
