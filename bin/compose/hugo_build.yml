@@ -29,7 +29,7 @@ services:
     command: --config /config/hugo.yaml
     # image: peaceiris/hugo:v0.x.x
     # image: peaceiris/hugo:v0.84.4-mod   # Hugo Modules
-    image: peaceiris/hugo:latest  # Hugo Modules and Node.js
+    image: peaceiris/hugo:v0.123.0  # Hugo Modules and Node.js
     volumes:
       - ${PWD}:/src
       - ${TMP_DIR}/hugo.yaml:/config/hugo.yaml
