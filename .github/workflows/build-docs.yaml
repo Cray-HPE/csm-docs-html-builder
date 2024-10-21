@@ -27,7 +27,7 @@ on:
   push:
   schedule:
    # 3AM UTC / 11PM EST / 8PM PST
-   - cron:  '0 3 * * *'
+   - cron:  '30 3 * * *'
   workflow_dispatch:
 
 jobs:
