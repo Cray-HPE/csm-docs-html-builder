@@ -7,10 +7,10 @@
       {{ partial "logo.html" . }}
     </div>
 
-    {{ if or .Site.IsMultilingual $showvisitedlinks }}
+    {{ if or .Site.IsMultiLingual $showvisitedlinks }}
     <section>
       <ul>
-      {{ if and .Site.IsMultilingual (not .Site.Params.DisableLanguageSwitchingButton)}}
+      {{ if and .Site.IsMultiLingual (not .Site.Params.DisableLanguageSwitchingButton)}}
         <li>
           <div class="select-style padding">
           v <select id="select-language" onchange="location = this.value;">
@@ -58,7 +58,7 @@
     <section id="homelinks">
       <ul>
         <li>
-            <a class="padding" href='{{ (cond (and (ne .Site.Params.landingPageURL nil) (.Site.IsMultilingual)) .Site.Params.landingPageURL "/") }}'>{{ safeHTML (cond (ne .Site.Params.landingPageName nil) .Site.Params.landingPageName "<i class='fas fa-home'></i> Home") }}</a>
+            <a class="padding" href='{{ (cond (and (ne .Site.Params.landingPageURL nil) (.Site.IsMultiLingual)) .Site.Params.landingPageURL "/") }}'>{{ safeHTML (cond (ne .Site.Params.landingPageName nil) .Site.Params.landingPageName "<i class='fas fa-home'></i> Home") }}</a>
         </li>
       </ul>
     </section>
