@@ -22,7 +22,8 @@ function transform_links() {
     # Converts:
     # - Skips internal stash links
     # - root links to relative links
-    # - wraps links in hugo's refrel lookup unless it has "http"
+    # - wraps links in hugo's "refrel ./*.md" lookup unless it has "http" or it is a single anchor
+    # - wraps links in hugo's "refrel #ref" lookup if it is a single anchor
     # - fixes image references
     # - replaces <a name="anchor"> format for hugo anchor ref formats
     # - changes README.md/index.md to '' - these files are renamed to _index.md and treated as directory index
@@ -30,8 +31,9 @@ function transform_links() {
     cat $1 | \
     grep -v "stash.us.cray.com" | \
     sed -r 's|\]\(\/|\]\(\.\/|g' | \
-    sed -r 's|\]\(([^)|:]*)\.md(#[^)]*)?\)|\]\(\{\{\< relref \"\.\/\1.md\2\" \>\}\}\)|g' | \
-    sed -r 's|\]\(([^)|:]*)\.(png\|svg)( [^)]*)?\)|\]\(\.\./\1\.\2\3\)|g' | \
+    sed -r 's|\]\(([^)|:]*\.md)(#[^)]*)?\)|\]\(\{\{\< relref \"\.\/\1\2\" \>\}\}\)|g' | \
+    sed -r 's|\]\((#[^)]*)?\)|\]\(\{\{\< relref \"\1\" \>\}\}\)|g' | \
+    sed -r 's|\]\(([^)|:]*)\.(png\|svg\|gif\|jpg)( [^)]*)?\)|\]\(\.\./\1\.\2\3\)|g' | \
     sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
     sed -rz 's|<(/)?aside( class="[^"]*")?>|<\1blockquote>|g'| \
     sed 's#/README\.md##g' | \
