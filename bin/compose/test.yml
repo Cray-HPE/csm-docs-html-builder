@@ -37,6 +37,6 @@ services:
     container_name: linkcheck_${SUFFIX}
     depends_on:
       - serve_static
-    image: filiph/linkcheck
+    image: tennox/linkcheck
     command:
       - http://serve_static/${DOCS_DIR}/en-${SUFFIX}
