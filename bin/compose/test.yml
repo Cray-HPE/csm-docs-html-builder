@@ -21,7 +21,6 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #
-version: '3'
 
 services:
   serve_static:
@@ -38,5 +37,11 @@ services:
     depends_on:
       - serve_static
     image: tennox/linkcheck
+    volumes:
+      - ${PWD}/bin/compose/build/linkchecker/linkchecker_skip.txt:/linkchecker_skip.txt
     command:
+      - --external
+      - --no-check-anchors
+      - --skip-file
+      - /linkchecker_skip.txt
       - http://serve_static/${DOCS_DIR}/en-${SUFFIX}
