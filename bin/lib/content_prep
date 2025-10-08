@@ -28,16 +28,29 @@ function transform_links() {
     # - replaces <a name="anchor"> format for hugo anchor ref formats
     # - changes README.md/index.md to '' - these files are renamed to _index.md and treated as directory index
     #   to _index.md file. So we just point to directory instead.
-    cat $1 | \
-    grep -v "stash.us.cray.com" | \
-    sed -r 's|\]\(\/|\]\(\.\/|g' | \
-    sed -r 's|\]\(([^)|:]*\.md)(#[^)]*)?\)|\]\(\{\{\< relref \"\.\/\1\2\" \>\}\}\)|g' | \
-    sed -r 's|\]\((#[^)]*)?\)|\]\(\{\{\< relref \"\1\" \>\}\}\)|g' | \
-    sed -r 's|\]\(([^)|:]*)\.(png\|svg\|gif\|jpg)( [^)]*)?\)|\]\(\.\./\1\.\2\3\)|g' | \
-    sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
-    sed -rz 's|<(/)?aside( class="[^"]*")?>|<\1blockquote>|g'| \
-    sed 's#/README\.md##g' | \
-    sed 's#/index\.md##g'
+    filename=$(basename "$1")
+    if [ "${filename}" == "README.md" ] || [ "${filename}" == "index.md" ]; then
+        cat $1 | \
+        grep -v "stash.us.cray.com" | \
+        sed -r 's|\]\(\/|\]\(\.\/|g' | \
+        sed -r 's|\]\(([^)|:]*\.md)(#[^)]*)?\)|\]\(\{\{\< relref \"\.\/\1\2\" \>\}\}\)|g' | \
+        sed -r 's|\]\((#[^)]*)?\)|\]\(\{\{\< relref \"\1\" \>\}\}\)|g' | \
+        sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
+        sed -rz 's|<(/)?aside( class="[^"]*")?>|<\1blockquote>|g'| \
+        sed 's#/README\.md##g' | \
+        sed 's#/index\.md##g'
+    else
+        cat $1 | \
+        grep -v "stash.us.cray.com" | \
+        sed -r 's|\]\(\/|\]\(\.\/|g' | \
+        sed -r 's|\]\(([^)|:]*\.md)(#[^)]*)?\)|\]\(\{\{\< relref \"\.\/\1\2\" \>\}\}\)|g' | \
+        sed -r 's|\]\((#[^)]*)?\)|\]\(\{\{\< relref \"\1\" \>\}\}\)|g' | \
+        sed -r "s|\]\(([^)|:]*)\.(png\|svg\|gif\|jpg)( [^)]*)?\)|\]\(\.\./\1\.\2\3\)|g" | \
+        sed -rz 's|<a name="([^"]*)"></a>\s*\n(\s*#+ [^\n]*)|\2 {#\1}|g' | \
+        sed -rz 's|<(/)?aside( class="[^"]*")?>|<\1blockquote>|g'| \
+        sed 's#/README\.md##g' | \
+        sed 's#/index\.md##g'
+    fi
 }
 
 function gen_hugo_yaml() {
